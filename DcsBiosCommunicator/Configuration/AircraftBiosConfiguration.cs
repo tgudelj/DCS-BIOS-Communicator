@@ -23,17 +23,17 @@ namespace DcsBios.Communicator.Configuration
         /// just nested dictionaries).
         /// </summary>
         /// <remarks>
-        /// This assumes that the directory contains a single aliases file <paramref name="aliasesFileName"/>. Skips all unparseable files and logs accordingly.
+        /// This assumes that the directory contains a single aliases file <paramref name="configDirectory"/>. Skips all unparseable files and logs accordingly.
         /// </remarks>
-        /// <param name="aliasesFileName">Name of the file containing the aliases, e.g. <code>AircraftAliases.json</code></param>
+        /// <param name="configDirectory">Name of the file containing the aliases, e.g. <code>AircraftAliases.json</code></param>
         /// <param name="logger">Logger</param>
         /// <param name="configLocations">Directories containing json configuration files outlining all available DCS-BIOS inputs/outputs</param>
         /// <returns>Parsed aircraft configurations</returns>
-        public static async Task<AircraftBiosConfiguration[]> AllConfigurations(string? aliasesFileName = null, ILogger<AircraftBiosConfiguration>? logger = null,
+        public static async Task<AircraftBiosConfiguration[]> AllConfigurations(string? configDirectory = null, ILogger<AircraftBiosConfiguration>? logger = null,
             params string[] configLocations)
         {
             var allFiles = configLocations.SelectMany(GetAllJsonFilesBelowDirectory).ToList();
-            var aliasTasks = allFiles.Where(f => f.Name == aliasesFileName).Select(f => GetAliases(f, logger));
+            var aliasTasks = allFiles.Where(f => f.Name == configDirectory).Select(f => GetAliases(f, logger));
             var aliasResults = await Task.WhenAll(aliasTasks);
 
             var aliases = new Dictionary<string, HashSet<string>>();
@@ -48,7 +48,7 @@ namespace DcsBios.Communicator.Configuration
 
             var configTasks = configLocations
                 .SelectMany(GetAllJsonFilesBelowDirectory)
-                .Where(f => f.Name != aliasesFileName)
+                .Where(f => f.Name != configDirectory)
                 .Select(f => BuildFromConfiguration(f, aliases, logger));
 
             return (await Task.WhenAll(configTasks)).Where(c => c != null).Select(c => c!).ToArray();

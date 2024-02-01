@@ -1,8 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DcsBiosCommunicator", "DcsBiosCommunicator\DcsBiosCommunicator.csproj", "{25F7C939-2F26-4F1F-9CE4-28C9F42A0523}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34511.84
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DcsBiosCommunicator", "DcsBiosCommunicator\DcsBiosCommunicator.csproj", "{25F7C939-2F26-4F1F-9CE4-28C9F42A0523}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DcsBiosCommunicatorTest", "DcsBiosCommunicatorTest\DcsBiosCommunicatorTest.csproj", "{C5174822-0248-45C4-BA9C-C0881D8A3E0E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DcsBiosCommunicatorTest", "DcsBiosCommunicatorTest\DcsBiosCommunicatorTest.csproj", "{C5174822-0248-45C4-BA9C-C0881D8A3E0E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MatricDCSCommunicator", "MatricDCSCommunicator\MatricDCSCommunicator.csproj", "{35DEB47E-9C03-4B30-BC89-5ABD1C007E3E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,5 +23,15 @@ Global
 		{C5174822-0248-45C4-BA9C-C0881D8A3E0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C5174822-0248-45C4-BA9C-C0881D8A3E0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C5174822-0248-45C4-BA9C-C0881D8A3E0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35DEB47E-9C03-4B30-BC89-5ABD1C007E3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35DEB47E-9C03-4B30-BC89-5ABD1C007E3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35DEB47E-9C03-4B30-BC89-5ABD1C007E3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35DEB47E-9C03-4B30-BC89-5ABD1C007E3E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A901E1A1-04C4-44E2-8C2A-15D23EBFF389}
 	EndGlobalSection
 EndGlobal
