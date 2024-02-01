@@ -36,4 +36,10 @@
       <ProjectReference Include="..\DcsBiosCommunicator\DcsBiosCommunicator.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Reference Include="MatricIntegration">
+        <HintPath>..\MatricDCSCommunicator\MatricIntegration.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
 </Project>
