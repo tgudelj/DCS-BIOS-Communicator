@@ -117,7 +117,7 @@
             lblDCSBiosConfigStatus.BorderStyle = BorderStyle.FixedSingle;
             lblDCSBiosConfigStatus.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             lblDCSBiosConfigStatus.ForeColor = Color.White;
-            lblDCSBiosConfigStatus.Location = new Point(17, 134);
+            lblDCSBiosConfigStatus.Location = new Point(17, 99);
             lblDCSBiosConfigStatus.Name = "lblDCSBiosConfigStatus";
             lblDCSBiosConfigStatus.Padding = new Padding(12);
             lblDCSBiosConfigStatus.Size = new Size(146, 45);
@@ -131,7 +131,7 @@
             lblUDPListenerStatus.BorderStyle = BorderStyle.FixedSingle;
             lblUDPListenerStatus.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             lblUDPListenerStatus.ForeColor = Color.White;
-            lblUDPListenerStatus.Location = new Point(17, 194);
+            lblUDPListenerStatus.Location = new Point(17, 159);
             lblUDPListenerStatus.Name = "lblUDPListenerStatus";
             lblUDPListenerStatus.Padding = new Padding(12);
             lblUDPListenerStatus.Size = new Size(146, 45);
@@ -145,7 +145,7 @@
             lblDataReceivedStatus.BorderStyle = BorderStyle.FixedSingle;
             lblDataReceivedStatus.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             lblDataReceivedStatus.ForeColor = Color.White;
-            lblDataReceivedStatus.Location = new Point(178, 194);
+            lblDataReceivedStatus.Location = new Point(178, 159);
             lblDataReceivedStatus.Name = "lblDataReceivedStatus";
             lblDataReceivedStatus.Padding = new Padding(12);
             lblDataReceivedStatus.Size = new Size(146, 45);
@@ -172,7 +172,7 @@
             lblMATRICStatus.BorderStyle = BorderStyle.FixedSingle;
             lblMATRICStatus.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             lblMATRICStatus.ForeColor = Color.White;
-            lblMATRICStatus.Location = new Point(178, 134);
+            lblMATRICStatus.Location = new Point(178, 99);
             lblMATRICStatus.Name = "lblMATRICStatus";
             lblMATRICStatus.Padding = new Padding(12);
             lblMATRICStatus.Size = new Size(146, 45);
@@ -191,7 +191,7 @@
             // 
             // button1
             // 
-            button1.Location = new Point(43, 261);
+            button1.Location = new Point(387, 159);
             button1.Name = "button1";
             button1.Size = new Size(75, 23);
             button1.TabIndex = 11;

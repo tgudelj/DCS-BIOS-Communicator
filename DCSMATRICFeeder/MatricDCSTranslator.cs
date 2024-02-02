@@ -1,22 +1,16 @@
 ﻿using DcsBios.Communicator;
 using Matric.Integration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace MatricDCSCommunicator {
+namespace DCSMATRICFeeder {
     internal class MatricDCSTranslator : IBiosTranslator {
         Matric.Integration.Matric matricComm;
         Dictionary<string, object> _dcsValues;
         Dictionary<string, ServerVariable> _changesBuffer;
-        Timer _timer;
+        System.Threading.Timer _timer;
         public MatricDCSTranslator() {
             _dcsValues = new Dictionary<string, object>();
             _changesBuffer = new Dictionary<string, ServerVariable>();
-            _timer = new Timer(SendUpdates, null, 100, 100);            
+            _timer = new System.Threading.Timer(SendUpdates, null, 100, 100);            
             matricComm = new Matric.Integration.Matric("DCS", null, 5300);
             matricComm.OnVariablesChanged += MatricComm_OnVariablesChanged;
         }
