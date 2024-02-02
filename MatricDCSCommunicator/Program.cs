@@ -30,6 +30,7 @@ namespace MatricDCSCommunicator {
 
             // register the json configuration files
             var configLocation = "%userprofile%/Saved Games/DCS.openbeta/Scripts/DCS-BIOS/doc/json/";
+            //
             //foreach (var config in await AircraftBiosConfiguration.AllConfigurations(configLocation)) {
             //    biosListener.RegisterConfiguration(config);
             //}
