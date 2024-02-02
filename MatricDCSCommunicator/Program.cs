@@ -34,7 +34,7 @@ namespace MatricDCSCommunicator {
             //foreach (var config in await AircraftBiosConfiguration.AllConfigurations(configLocation)) {
             //    biosListener.RegisterConfiguration(config);
             //}
-            foreach (var config in await AircraftBiosConfiguration.AllConfigurations("AircraftAliases.json", null, configLocation)) {
+            foreach (AircraftBiosConfiguration config in await AircraftBiosConfiguration.AllConfigurations("AircraftAliases.json", null, configLocation)) {
                 biosListener.RegisterConfiguration(config);
             }
             // start the listener
