@@ -14,9 +14,11 @@ using System.Text.Json.Nodes;
 namespace DCSMATRICFeeder {
     public partial class frmMain : Form {
 
-        private bool _isRunning = false;
+        bool _isRunning = false;
         MiddlewareConfig _appConfig;
-
+        MatricDCSTranslator translator;
+        BiosUdpClient biosClient;
+        BiosListener biosListener;
         public frmMain() {
             InitializeComponent();
         }
@@ -83,8 +85,17 @@ namespace DCSMATRICFeeder {
             return (enabled, port);
         }
 
-        async void StartProcessing() {
+        async void ToggleProcessing() {
+            if (_isRunning) { 
+                biosClient.Close();
+                biosListener.Stop();
 
+                //biosListener.Dispose();
+                translator.Dispose();
+                _isRunning = false;
+                btnStartStop.Text = "START";
+                return;
+            }
             //check DCS
             if (!Directory.Exists(txtDCSBiosInstancePath.Text)) {
                 MessageBox.Show($@"Path ""{txtDCSBiosInstancePath.Text}"" doesn't exist.", "Invalid configuration", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -101,11 +112,10 @@ namespace DCSMATRICFeeder {
             }
 
             // create a new UDP client for talking to DCS-BIOS
-            var client = new BiosUdpClient(IPAddress.Parse(_appConfig.ListenAddress), 7778, _appConfig.ListenPort, Program.loggerFactory.CreateLogger<BiosUdpClient>());
-            client.OpenConnection();
-
-            MatricDCSTranslator translator = new MatricDCSTranslator();
-            var biosListener = new BiosListener(client, translator, Program.loggerFactory.CreateLogger<BiosListener>());
+            biosClient = new BiosUdpClient(IPAddress.Parse(_appConfig.ListenAddress), 7778, _appConfig.ListenPort, Program.loggerFactory.CreateLogger<BiosUdpClient>());
+            biosClient.OpenConnection();
+            translator = new MatricDCSTranslator(matricIntegrationPort, Program.logger);
+            biosListener = new BiosListener(biosClient, translator, Program.loggerFactory.CreateLogger<BiosListener>());
 
             foreach (AircraftBiosConfiguration config in await AircraftBiosConfiguration.AllConfigurations("AircraftAliases.json", null, _appConfig.DCSBIOSJsonPath)) {
                 biosListener.RegisterConfiguration(config);
@@ -116,10 +126,12 @@ namespace DCSMATRICFeeder {
 
             // start the listener
             biosListener.Start();
+            _isRunning = true;
+            btnStartStop.Text = "STOP";
         }
 
         private void btnStartStop_Click(object sender, EventArgs e) {
-            StartProcessing();
+            ToggleProcessing();
         }
 
         private void frmMain_Load(object sender, EventArgs e) {

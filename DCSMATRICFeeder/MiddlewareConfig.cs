@@ -6,7 +6,7 @@
         public MiddlewareConfig() {
             ListenAddress = "239.255.50.10";
             ListenPort = 5010;
-            DCSBIOSJsonPath = "%userprofile%/Saved Games/DCS.openbeta/Scripts/DCS-BIOS/doc/json/";
+            DCSBIOSJsonPath = "";
         }
 
         /// <summary>

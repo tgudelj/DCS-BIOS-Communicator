@@ -208,7 +208,8 @@ namespace DcsBios.Communicator
         {
             _log.LogDebug("Stopping DCS-BIOS listener...");
             _cts.Cancel();
-            _delegateThread?.Wait();
+            //_delegateThread?.Wait();
+            _delegateThread?.Wait(500);
             _log.LogInformation("DCS-BIOS listener stopped");
         }
 
