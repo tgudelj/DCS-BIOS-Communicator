@@ -26,22 +26,21 @@
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             txtBIOSListenPort = new NumericUpDown();
-            label1 = new Label();
-            comboBox1 = new ComboBox();
-            label2 = new Label();
+            lblBiosListenIP = new Label();
+            txtListenIp = new ComboBox();
+            lblBiosListenPort = new Label();
             trayIcon = new NotifyIcon(components);
             ctxMenu = new ContextMenuStrip(components);
             toolStripMenuItem1 = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
             toolStripMenuItem2 = new ToolStripMenuItem();
-            lblDCSBiosConfigStatus = new Label();
-            lblUDPListenerStatus = new Label();
-            lblDataReceivedStatus = new Label();
             btnStartStop = new Button();
-            lblMATRICStatus = new Label();
             pictureBox1 = new PictureBox();
             dlgFindDCS = new FolderBrowserDialog();
-            button1 = new Button();
+            btnBrowse = new Button();
+            txtDCSBiosInstancePath = new ComboBox();
+            lblBiosInstance = new Label();
+            printPreviewDialog1 = new PrintPreviewDialog();
             ((System.ComponentModel.ISupportInitialize)txtBIOSListenPort).BeginInit();
             ctxMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -49,38 +48,40 @@
             // 
             // txtBIOSListenPort
             // 
+            txtBIOSListenPort.Font = new Font("Segoe UI", 10F);
             txtBIOSListenPort.Location = new Point(178, 57);
             txtBIOSListenPort.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
             txtBIOSListenPort.Name = "txtBIOSListenPort";
-            txtBIOSListenPort.Size = new Size(146, 23);
+            txtBIOSListenPort.Size = new Size(146, 25);
             txtBIOSListenPort.TabIndex = 2;
             txtBIOSListenPort.Value = new decimal(new int[] { 5010, 0, 0, 0 });
             // 
-            // label1
+            // lblBiosListenIP
             // 
-            label1.Location = new Point(17, 20);
-            label1.Name = "label1";
-            label1.Size = new Size(146, 34);
-            label1.TabIndex = 2;
-            label1.Text = "Listening on IP (default 239.255.50.10 multicast)";
+            lblBiosListenIP.Location = new Point(17, 20);
+            lblBiosListenIP.Name = "lblBiosListenIP";
+            lblBiosListenIP.Size = new Size(146, 34);
+            lblBiosListenIP.TabIndex = 2;
+            lblBiosListenIP.Text = "Listening on IP (default 239.255.50.10 multicast)";
             // 
-            // comboBox1
+            // txtListenIp
             // 
-            comboBox1.FormattingEnabled = true;
-            comboBox1.Items.AddRange(new object[] { "239.255.50.10" });
-            comboBox1.Location = new Point(17, 57);
-            comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(146, 23);
-            comboBox1.TabIndex = 1;
-            comboBox1.Text = "239.255.50.10";
+            txtListenIp.Font = new Font("Segoe UI", 10F);
+            txtListenIp.FormattingEnabled = true;
+            txtListenIp.Items.AddRange(new object[] { "239.255.50.10" });
+            txtListenIp.Location = new Point(17, 57);
+            txtListenIp.Name = "txtListenIp";
+            txtListenIp.Size = new Size(146, 25);
+            txtListenIp.TabIndex = 1;
+            txtListenIp.Text = "239.255.50.10";
             // 
-            // label2
+            // lblBiosListenPort
             // 
-            label2.Location = new Point(178, 20);
-            label2.Name = "label2";
-            label2.Size = new Size(146, 34);
-            label2.TabIndex = 4;
-            label2.Text = "Listening port (default 5010)";
+            lblBiosListenPort.Location = new Point(178, 20);
+            lblBiosListenPort.Name = "lblBiosListenPort";
+            lblBiosListenPort.Size = new Size(146, 34);
+            lblBiosListenPort.TabIndex = 4;
+            lblBiosListenPort.Text = "Listening port (default 5010)";
             // 
             // trayIcon
             // 
@@ -112,55 +113,13 @@
             toolStripMenuItem2.Size = new Size(103, 22);
             toolStripMenuItem2.Text = "Quit";
             // 
-            // lblDCSBiosConfigStatus
-            // 
-            lblDCSBiosConfigStatus.BackColor = Color.IndianRed;
-            lblDCSBiosConfigStatus.BorderStyle = BorderStyle.FixedSingle;
-            lblDCSBiosConfigStatus.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            lblDCSBiosConfigStatus.ForeColor = Color.White;
-            lblDCSBiosConfigStatus.Location = new Point(17, 99);
-            lblDCSBiosConfigStatus.Name = "lblDCSBiosConfigStatus";
-            lblDCSBiosConfigStatus.Padding = new Padding(12);
-            lblDCSBiosConfigStatus.Size = new Size(146, 45);
-            lblDCSBiosConfigStatus.TabIndex = 5;
-            lblDCSBiosConfigStatus.Text = "DCS-BIOS config";
-            lblDCSBiosConfigStatus.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // lblUDPListenerStatus
-            // 
-            lblUDPListenerStatus.BackColor = Color.LimeGreen;
-            lblUDPListenerStatus.BorderStyle = BorderStyle.FixedSingle;
-            lblUDPListenerStatus.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            lblUDPListenerStatus.ForeColor = Color.White;
-            lblUDPListenerStatus.Location = new Point(17, 159);
-            lblUDPListenerStatus.Name = "lblUDPListenerStatus";
-            lblUDPListenerStatus.Padding = new Padding(12);
-            lblUDPListenerStatus.Size = new Size(146, 45);
-            lblUDPListenerStatus.TabIndex = 6;
-            lblUDPListenerStatus.Text = "Listening";
-            lblUDPListenerStatus.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // lblDataReceivedStatus
-            // 
-            lblDataReceivedStatus.BackColor = Color.LimeGreen;
-            lblDataReceivedStatus.BorderStyle = BorderStyle.FixedSingle;
-            lblDataReceivedStatus.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            lblDataReceivedStatus.ForeColor = Color.White;
-            lblDataReceivedStatus.Location = new Point(178, 159);
-            lblDataReceivedStatus.Name = "lblDataReceivedStatus";
-            lblDataReceivedStatus.Padding = new Padding(12);
-            lblDataReceivedStatus.Size = new Size(146, 45);
-            lblDataReceivedStatus.TabIndex = 7;
-            lblDataReceivedStatus.Text = "Data recv";
-            lblDataReceivedStatus.TextAlign = ContentAlignment.MiddleCenter;
-            // 
             // btnStartStop
             // 
             btnStartStop.BackColor = Color.Red;
             btnStartStop.FlatStyle = FlatStyle.Flat;
             btnStartStop.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
             btnStartStop.ForeColor = Color.White;
-            btnStartStop.Location = new Point(362, 29);
+            btnStartStop.Location = new Point(447, 194);
             btnStartStop.Name = "btnStartStop";
             btnStartStop.Size = new Size(100, 51);
             btnStartStop.TabIndex = 3;
@@ -168,57 +127,68 @@
             btnStartStop.UseVisualStyleBackColor = false;
             btnStartStop.Click += btnStartStop_Click;
             // 
-            // lblMATRICStatus
-            // 
-            lblMATRICStatus.BackColor = Color.IndianRed;
-            lblMATRICStatus.BorderStyle = BorderStyle.FixedSingle;
-            lblMATRICStatus.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            lblMATRICStatus.ForeColor = Color.White;
-            lblMATRICStatus.Location = new Point(178, 99);
-            lblMATRICStatus.Name = "lblMATRICStatus";
-            lblMATRICStatus.Padding = new Padding(12);
-            lblMATRICStatus.Size = new Size(146, 45);
-            lblMATRICStatus.TabIndex = 9;
-            lblMATRICStatus.Text = "MATRIC";
-            lblMATRICStatus.TextAlign = ContentAlignment.MiddleCenter;
-            // 
             // pictureBox1
             // 
             pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
-            pictureBox1.Location = new Point(354, 19);
+            pictureBox1.Location = new Point(439, 184);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(117, 71);
             pictureBox1.TabIndex = 10;
             pictureBox1.TabStop = false;
             // 
-            // button1
+            // btnBrowse
             // 
-            button1.Location = new Point(387, 159);
-            button1.Name = "button1";
-            button1.Size = new Size(75, 23);
-            button1.TabIndex = 11;
-            button1.Text = "button1";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
+            btnBrowse.Location = new Point(477, 118);
+            btnBrowse.Name = "btnBrowse";
+            btnBrowse.Size = new Size(75, 23);
+            btnBrowse.TabIndex = 11;
+            btnBrowse.Text = "Browse...";
+            btnBrowse.UseVisualStyleBackColor = true;
+            btnBrowse.Click += btnBrowse_Click;
+            // 
+            // txtDCSBiosInstancePath
+            // 
+            txtDCSBiosInstancePath.Font = new Font("Segoe UI", 10F);
+            txtDCSBiosInstancePath.FormattingEnabled = true;
+            txtDCSBiosInstancePath.Location = new Point(17, 118);
+            txtDCSBiosInstancePath.Name = "txtDCSBiosInstancePath";
+            txtDCSBiosInstancePath.Size = new Size(454, 25);
+            txtDCSBiosInstancePath.TabIndex = 12;
+            // 
+            // lblBiosInstance
+            // 
+            lblBiosInstance.Location = new Point(17, 93);
+            lblBiosInstance.Name = "lblBiosInstance";
+            lblBiosInstance.Size = new Size(307, 22);
+            lblBiosInstance.TabIndex = 13;
+            lblBiosInstance.Text = "DCS-BIOS instance (DCS-BIOS/doc/json)";
+            // 
+            // printPreviewDialog1
+            // 
+            printPreviewDialog1.AutoScrollMargin = new Size(0, 0);
+            printPreviewDialog1.AutoScrollMinSize = new Size(0, 0);
+            printPreviewDialog1.ClientSize = new Size(400, 300);
+            printPreviewDialog1.Enabled = true;
+            printPreviewDialog1.Icon = (Icon)resources.GetObject("printPreviewDialog1.Icon");
+            printPreviewDialog1.Name = "printPreviewDialog1";
+            printPreviewDialog1.Visible = false;
             // 
             // frmMain
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(494, 331);
-            Controls.Add(button1);
-            Controls.Add(lblMATRICStatus);
+            ClientSize = new Size(559, 261);
+            Controls.Add(lblBiosInstance);
+            Controls.Add(txtDCSBiosInstancePath);
+            Controls.Add(btnBrowse);
             Controls.Add(btnStartStop);
-            Controls.Add(lblDataReceivedStatus);
-            Controls.Add(lblUDPListenerStatus);
-            Controls.Add(lblDCSBiosConfigStatus);
-            Controls.Add(label2);
-            Controls.Add(comboBox1);
-            Controls.Add(label1);
+            Controls.Add(lblBiosListenPort);
+            Controls.Add(txtListenIp);
+            Controls.Add(lblBiosListenIP);
             Controls.Add(txtBIOSListenPort);
             Controls.Add(pictureBox1);
             Name = "frmMain";
-            Text = "DCS MATRIC feeder";
+            Text = "DCS-BIOS MATRIC Middleware";
             Load += frmMain_Load;
             ((System.ComponentModel.ISupportInitialize)txtBIOSListenPort).EndInit();
             ctxMenu.ResumeLayout(false);
@@ -229,21 +199,20 @@
         #endregion
 
         private NumericUpDown txtBIOSListenPort;
-        private Label label1;
-        private ComboBox comboBox1;
-        private Label label2;
+        private Label lblBiosListenIP;
+        private ComboBox txtListenIp;
+        private Label lblBiosListenPort;
         private NotifyIcon trayIcon;
         private ContextMenuStrip ctxMenu;
         private ToolStripMenuItem toolStripMenuItem1;
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripMenuItem toolStripMenuItem2;
-        private Label lblDCSBiosConfigStatus;
-        private Label lblUDPListenerStatus;
-        private Label lblDataReceivedStatus;
         private Button btnStartStop;
-        private Label lblMATRICStatus;
         private PictureBox pictureBox1;
         private FolderBrowserDialog dlgFindDCS;
-        private Button button1;
+        private Button btnBrowse;
+        private ComboBox txtDCSBiosInstancePath;
+        private Label lblBiosInstance;
+        private PrintPreviewDialog printPreviewDialog1;
     }
 }

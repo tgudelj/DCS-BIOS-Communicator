@@ -1,19 +1,25 @@
+using DCSMATRICFeeder.Properties;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using System.Diagnostics;
 
 namespace DCSMATRICFeeder {
     internal static class Program {
-        public static IConfiguration Configuration;
-        /// <summary>
-        ///  The main entry point for the application.
-        /// </summary>
+        internal static ILoggerFactory loggerFactory;
+        internal static ILogger logger;
+
         [STAThread]
         static void Main() {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
+            if (Debugger.IsAttached) {
+                Settings.Default.Reset();
+            }                
+            loggerFactory = LoggerFactory.Create(builder => {
+                builder
+                .AddConsole()
+                .AddDebug();
+            });
+            logger = loggerFactory.CreateLogger("DCS-BIOS-MATRIC");
 
-            var builder = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-            Configuration = builder.Build();
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
