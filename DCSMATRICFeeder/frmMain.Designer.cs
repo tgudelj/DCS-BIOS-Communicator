@@ -72,6 +72,7 @@
             comboBox1.Name = "comboBox1";
             comboBox1.Size = new Size(146, 23);
             comboBox1.TabIndex = 1;
+            comboBox1.Text = "239.255.50.10";
             // 
             // label2
             // 
@@ -165,6 +166,7 @@
             btnStartStop.TabIndex = 3;
             btnStartStop.Text = "START";
             btnStartStop.UseVisualStyleBackColor = false;
+            btnStartStop.Click += btnStartStop_Click;
             // 
             // lblMATRICStatus
             // 
@@ -217,6 +219,7 @@
             Controls.Add(pictureBox1);
             Name = "frmMain";
             Text = "DCS MATRIC feeder";
+            Load += frmMain_Load;
             ((System.ComponentModel.ISupportInitialize)txtBIOSListenPort).EndInit();
             ctxMenu.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();

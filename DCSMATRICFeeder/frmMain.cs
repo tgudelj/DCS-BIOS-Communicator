@@ -1,6 +1,8 @@
 using DcsBios.Communicator;
 using DcsBios.Communicator.Configuration;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using System.Configuration;
 using System.Net;
 
 namespace DCSMATRICFeeder {
@@ -13,12 +15,12 @@ namespace DCSMATRICFeeder {
             dlgFindDCS.ShowDialog();
         }
 
-        private void TestEnvironment() { 
+        private void TestEnvironment() {
             //Check if DCS-BIOS is present
 
             //Check if MATRIC is running
 
-       
+
         }
 
 
@@ -51,6 +53,14 @@ namespace DCSMATRICFeeder {
             }
             // start the listener
             biosListener.Start();
+        }
+
+        private void btnStartStop_Click(object sender, EventArgs e) {
+            Listen();
+        }
+
+        private void frmMain_Load(object sender, EventArgs e) {
+           var c = Program.Configuration.GetSection("MiddlewareConfig").Get<MiddlewareConfig>();
         }
     }
 }
