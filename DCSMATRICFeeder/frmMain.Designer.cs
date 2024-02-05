@@ -23,17 +23,11 @@
         ///  the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             txtBIOSListenPort = new NumericUpDown();
             lblBiosListenIP = new Label();
             txtListenIp = new ComboBox();
             lblBiosListenPort = new Label();
-            trayIcon = new NotifyIcon(components);
-            ctxMenu = new ContextMenuStrip(components);
-            toolStripMenuItem1 = new ToolStripMenuItem();
-            toolStripSeparator1 = new ToolStripSeparator();
-            toolStripMenuItem2 = new ToolStripMenuItem();
             btnStartStop = new Button();
             dlgFindDCS = new FolderBrowserDialog();
             btnBrowse = new Button();
@@ -43,8 +37,9 @@
             pbBuffer = new ProgressBar();
             label1 = new Label();
             label2 = new Label();
+            groupBox1 = new GroupBox();
             ((System.ComponentModel.ISupportInitialize)txtBIOSListenPort).BeginInit();
-            ctxMenu.SuspendLayout();
+            groupBox1.SuspendLayout();
             SuspendLayout();
             // 
             // txtBIOSListenPort
@@ -89,42 +84,12 @@
             lblBiosListenPort.Text = "DCS-BOIS listener port (default 5010)";
             lblBiosListenPort.Click += lblBiosListenPort_Click;
             // 
-            // trayIcon
-            // 
-            trayIcon.ContextMenuStrip = ctxMenu;
-            trayIcon.Icon = (Icon)resources.GetObject("trayIcon.Icon");
-            trayIcon.Text = "notifyIcon1";
-            trayIcon.Visible = true;
-            // 
-            // ctxMenu
-            // 
-            ctxMenu.Items.AddRange(new ToolStripItem[] { toolStripMenuItem1, toolStripSeparator1, toolStripMenuItem2 });
-            ctxMenu.Name = "ctxMenu";
-            ctxMenu.Size = new Size(104, 54);
-            // 
-            // toolStripMenuItem1
-            // 
-            toolStripMenuItem1.Name = "toolStripMenuItem1";
-            toolStripMenuItem1.Size = new Size(103, 22);
-            toolStripMenuItem1.Text = "Show";
-            // 
-            // toolStripSeparator1
-            // 
-            toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(100, 6);
-            // 
-            // toolStripMenuItem2
-            // 
-            toolStripMenuItem2.Name = "toolStripMenuItem2";
-            toolStripMenuItem2.Size = new Size(103, 22);
-            toolStripMenuItem2.Text = "Quit";
-            // 
             // btnStartStop
             // 
             btnStartStop.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
-            btnStartStop.Location = new Point(436, 162);
+            btnStartStop.Location = new Point(436, 153);
             btnStartStop.Name = "btnStartStop";
-            btnStartStop.Size = new Size(227, 51);
+            btnStartStop.Size = new Size(227, 43);
             btnStartStop.TabIndex = 5;
             btnStartStop.Text = "START";
             btnStartStop.UseVisualStyleBackColor = true;
@@ -163,10 +128,10 @@
             // 
             pbSentVars.BackColor = Color.FromArgb(66, 66, 66);
             pbSentVars.ForeColor = Color.FromArgb(244, 157, 15);
-            pbSentVars.Location = new Point(63, 263);
+            pbSentVars.Location = new Point(74, 263);
             pbSentVars.Maximum = 200;
             pbSentVars.Name = "pbSentVars";
-            pbSentVars.Size = new Size(600, 23);
+            pbSentVars.Size = new Size(583, 23);
             pbSentVars.Step = 1;
             pbSentVars.Style = ProgressBarStyle.Continuous;
             pbSentVars.TabIndex = 14;
@@ -175,10 +140,10 @@
             // 
             pbBuffer.BackColor = Color.FromArgb(66, 66, 66);
             pbBuffer.ForeColor = Color.FromArgb(244, 157, 15);
-            pbBuffer.Location = new Point(63, 234);
+            pbBuffer.Location = new Point(74, 234);
             pbBuffer.Maximum = 200;
             pbBuffer.Name = "pbBuffer";
-            pbBuffer.Size = new Size(600, 23);
+            pbBuffer.Size = new Size(583, 23);
             pbBuffer.Step = 1;
             pbBuffer.Style = ProgressBarStyle.Continuous;
             pbBuffer.TabIndex = 15;
@@ -188,7 +153,7 @@
             label1.AutoSize = true;
             label1.FlatStyle = FlatStyle.Flat;
             label1.Font = new Font("Segoe UI", 10F);
-            label1.Location = new Point(12, 234);
+            label1.Location = new Point(11, 32);
             label1.Name = "label1";
             label1.Size = new Size(45, 19);
             label1.TabIndex = 16;
@@ -199,19 +164,29 @@
             label2.AutoSize = true;
             label2.FlatStyle = FlatStyle.Flat;
             label2.Font = new Font("Segoe UI", 10F);
-            label2.Location = new Point(12, 263);
+            label2.Location = new Point(11, 61);
             label2.Name = "label2";
             label2.Size = new Size(21, 19);
             label2.TabIndex = 17;
             label2.Text = "Tx";
             // 
+            // groupBox1
+            // 
+            groupBox1.Controls.Add(label2);
+            groupBox1.Controls.Add(label1);
+            groupBox1.Font = new Font("Segoe UI", 10F);
+            groupBox1.Location = new Point(12, 202);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new Size(651, 101);
+            groupBox1.TabIndex = 18;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Status";
+            // 
             // frmMain
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(675, 291);
-            Controls.Add(label2);
-            Controls.Add(label1);
+            ClientSize = new Size(675, 307);
             Controls.Add(pbBuffer);
             Controls.Add(pbSentVars);
             Controls.Add(lblBiosInstance);
@@ -222,6 +197,7 @@
             Controls.Add(txtListenIp);
             Controls.Add(lblBiosListenIP);
             Controls.Add(txtBIOSListenPort);
+            Controls.Add(groupBox1);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
@@ -229,9 +205,9 @@
             Text = "DCS-BIOS MATRIC Middleware";
             Load += frmMain_Load;
             ((System.ComponentModel.ISupportInitialize)txtBIOSListenPort).EndInit();
-            ctxMenu.ResumeLayout(false);
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
@@ -240,11 +216,6 @@
         private Label lblBiosListenIP;
         private ComboBox txtListenIp;
         private Label lblBiosListenPort;
-        private NotifyIcon trayIcon;
-        private ContextMenuStrip ctxMenu;
-        private ToolStripMenuItem toolStripMenuItem1;
-        private ToolStripSeparator toolStripSeparator1;
-        private ToolStripMenuItem toolStripMenuItem2;
         private Button btnStartStop;
         private FolderBrowserDialog dlgFindDCS;
         private Button btnBrowse;
@@ -254,5 +225,6 @@
         private ProgressBar pbBuffer;
         private Label label1;
         private Label label2;
+        private GroupBox groupBox1;
     }
 }
