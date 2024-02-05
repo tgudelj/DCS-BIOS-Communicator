@@ -21,7 +21,7 @@ namespace DCSMATRICFeeder {
             logger = loggerFactory.CreateLogger("DCS-BIOS-MATRIC");
 
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
-            Application.EnableVisualStyles();
+            //Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
             ApplicationConfiguration.Initialize();
