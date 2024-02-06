@@ -38,6 +38,7 @@
             label1 = new Label();
             label2 = new Label();
             groupBox1 = new GroupBox();
+            btnFilterDialog = new Button();
             ((System.ComponentModel.ISupportInitialize)txtBIOSListenPort).BeginInit();
             groupBox1.SuspendLayout();
             SuspendLayout();
@@ -182,11 +183,22 @@
             groupBox1.TabStop = false;
             groupBox1.Text = "Status";
             // 
+            // btnFilterDialog
+            // 
+            btnFilterDialog.Location = new Point(12, 148);
+            btnFilterDialog.Name = "btnFilterDialog";
+            btnFilterDialog.Size = new Size(127, 23);
+            btnFilterDialog.TabIndex = 19;
+            btnFilterDialog.Text = "Filter variables";
+            btnFilterDialog.UseVisualStyleBackColor = true;
+            btnFilterDialog.Click += btnFilterDialog_Click;
+            // 
             // frmMain
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(675, 307);
+            Controls.Add(btnFilterDialog);
             Controls.Add(pbBuffer);
             Controls.Add(pbSentVars);
             Controls.Add(lblBiosInstance);
@@ -226,5 +238,6 @@
         private Label label1;
         private Label label2;
         private GroupBox groupBox1;
+        private Button btnFilterDialog;
     }
 }

@@ -118,6 +118,7 @@ namespace DCSMATRICFeeder {
             biosListener = new BiosListener(biosClient, translator, Program.loggerFactory.CreateLogger<BiosListener>());
 
             foreach (AircraftBiosConfiguration config in await AircraftBiosConfiguration.AllConfigurations("AircraftAliases.json", null, _appConfig.DCSBIOSJsonPath)) {
+                Program.aircraftBiosConfigurations.Add(config.AircraftName, config);
                 biosListener.RegisterConfiguration(config);
             }
 
@@ -128,6 +129,12 @@ namespace DCSMATRICFeeder {
             biosListener.Start();
             _isRunning = true;
             btnStartStop.Text = "STOP";
+        }
+
+        private async void LoadDCSBiosConfig() {
+            foreach (AircraftBiosConfiguration config in await AircraftBiosConfiguration.AllConfigurations("AircraftAliases.json", null, _appConfig.DCSBIOSJsonPath)) {
+                Program.aircraftBiosConfigurations.Add(config.AircraftName, config);
+            }
         }
 
         private void Translator_UpdateBufferSizeNotification(object? sender, MatricDCSTranslator.TxRxNotificationEventArgs e) {
@@ -197,6 +204,11 @@ namespace DCSMATRICFeeder {
 
         private void lblBiosInstance_Click(object sender, EventArgs e) {
             txtDCSBiosInstancePath.Focus();
+        }
+
+        private void btnFilterDialog_Click(object sender, EventArgs e) {
+            FormVariablesFilter frmVars = new FormVariablesFilter();
+            frmVars.ShowDialog();
         }
     }
 }

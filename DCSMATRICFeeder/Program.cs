@@ -1,3 +1,4 @@
+using DcsBios.Communicator.Configuration;
 using DCSMATRICFeeder.Properties;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -7,6 +8,7 @@ namespace DCSMATRICFeeder {
     internal static class Program {
         internal static ILoggerFactory loggerFactory;
         internal static ILogger logger;
+        internal static Dictionary<string, AircraftBiosConfiguration> aircraftBiosConfigurations = new Dictionary<string, AircraftBiosConfiguration>();
 
         [STAThread]
         static void Main() {
