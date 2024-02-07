@@ -58,19 +58,19 @@
             txtFilter.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             txtFilter.BorderStyle = BorderStyle.FixedSingle;
             txtFilter.Font = new Font("Segoe UI", 10F);
-            txtFilter.Location = new Point(16, 76);
+            txtFilter.Location = new Point(12, 74);
             txtFilter.Multiline = true;
             txtFilter.Name = "txtFilter";
             txtFilter.ScrollBars = ScrollBars.Vertical;
-            txtFilter.Size = new Size(772, 375);
+            txtFilter.Size = new Size(786, 377);
             txtFilter.TabIndex = 15;
             // 
             // label1
             // 
             label1.Font = new Font("Segoe UI", 10F);
-            label1.Location = new Point(16, 51);
+            label1.Location = new Point(12, 49);
             label1.Name = "label1";
-            label1.Size = new Size(772, 22);
+            label1.Size = new Size(427, 22);
             label1.TabIndex = 16;
             label1.Text = "Variables to export from DCS-BIOS to MATRIC";
             // 
