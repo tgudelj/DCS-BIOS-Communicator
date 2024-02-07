@@ -1,6 +1,7 @@
 ﻿using DcsBios.Communicator;
 using Matric.Integration;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace DCSMATRICFeeder {
@@ -10,11 +11,15 @@ namespace DCSMATRICFeeder {
             public TxRxNotificationEventArgs(int count) {
                 Count = count;
             }
-
             public int Count { get; set; }
         }
 
         int MAX_VAR_LIST = 100;
+        const string COMMON_DATA = "CommonData";
+        const string METADATA_START = "MetadataStart";
+        const string METADATA_END = "MetadataEnd";
+        string _currentAircraftName = string.Empty;
+        List<string> _allowedVariables = new List<string>();
         Matric.Integration.Matric matricComm;
         Dictionary<string, object> _dcsValues;
         Dictionary<string, ServerVariable> _changesBuffer;
@@ -39,6 +44,34 @@ namespace DCSMATRICFeeder {
         }
 
         public void FromBios<T>(string biosCode, T data) {
+            if (biosCode == "_ACFT_NAME") {
+                //get list of user selected variables. If it doesn't exist do not filter, forward everything to MATRIC
+                if (!data.ToString().Equals(_currentAircraftName)) { 
+                    //New aircraft, load config for aircraft
+                    _currentAircraftName = data.ToString();
+                    if (Program.mwSettings.AircraftVariables.ContainsKey(_currentAircraftName)) {
+                        _allowedVariables.Clear();
+                        _allowedVariables = Program.mwSettings.AircraftVariables[_currentAircraftName];
+                        //Add common and metadata
+                        if (Program.mwSettings.AircraftVariables.ContainsKey(COMMON_DATA)) {
+                            _allowedVariables.AddRange(Program.mwSettings.AircraftVariables[COMMON_DATA]);
+                        }
+                        if (Program.mwSettings.AircraftVariables.ContainsKey(METADATA_START)) {
+                            _allowedVariables.AddRange(Program.mwSettings.AircraftVariables[METADATA_START]);
+                        }
+                        if (Program.mwSettings.AircraftVariables.ContainsKey(METADATA_END)) {
+                            _allowedVariables.AddRange(Program.mwSettings.AircraftVariables[METADATA_END]);
+                        }
+                    }
+                }
+            }
+
+            if(_allowedVariables.Count > 0) {
+                if(!_allowedVariables.Contains(biosCode)) {
+                    return;
+                }
+            }
+
             string varName = $"dcs_{biosCode}";
             lock(locker) {
                 object currentData = null;

@@ -58,5 +58,17 @@ namespace DCSMATRICFeeder.Properties {
                 this["DCSBIOSJsonPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string AircraftVariables {
+            get {
+                return ((string)(this["AircraftVariables"]));
+            }
+            set {
+                this["AircraftVariables"] = value;
+            }
+        }
     }
 }

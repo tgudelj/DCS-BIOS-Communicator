@@ -30,6 +30,7 @@
             label1 = new Label();
             btnSave = new Button();
             btnCancel = new Button();
+            btnResetVariables = new Button();
             SuspendLayout();
             // 
             // ddAircraft
@@ -50,6 +51,7 @@
             lblAircraft.Size = new Size(180, 22);
             lblAircraft.TabIndex = 14;
             lblAircraft.Text = "Aircraft name";
+            lblAircraft.Click += lblAircraft_Click;
             // 
             // txtFilter
             // 
@@ -70,7 +72,7 @@
             label1.Name = "label1";
             label1.Size = new Size(772, 22);
             label1.TabIndex = 16;
-            label1.Text = "Variables to export (if empty all will be exported)";
+            label1.Text = "Variables to export from DCS-BIOS to MATRIC";
             // 
             // btnSave
             // 
@@ -96,11 +98,24 @@
             btnCancel.UseVisualStyleBackColor = true;
             btnCancel.Click += btnCancel_Click;
             // 
+            // btnResetVariables
+            // 
+            btnResetVariables.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnResetVariables.Font = new Font("Segoe UI", 10F);
+            btnResetVariables.Location = new Point(590, 9);
+            btnResetVariables.Name = "btnResetVariables";
+            btnResetVariables.Size = new Size(198, 37);
+            btnResetVariables.TabIndex = 19;
+            btnResetVariables.Text = "Reset variables";
+            btnResetVariables.UseVisualStyleBackColor = true;
+            btnResetVariables.Click += btnResetVariables_Click;
+            // 
             // FormVariablesFilter
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 506);
+            Controls.Add(btnResetVariables);
             Controls.Add(btnCancel);
             Controls.Add(btnSave);
             Controls.Add(label1);
@@ -110,8 +125,9 @@
             Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
             MinimizeBox = false;
+            MinimumSize = new Size(816, 545);
             Name = "FormVariablesFilter";
-            Text = "Variables filter";
+            Text = "Variables Filter";
             Load += FormVariablesFilter_Load;
             ResumeLayout(false);
             PerformLayout();
@@ -125,5 +141,6 @@
         private Label label1;
         private Button btnSave;
         private Button btnCancel;
+        private Button btnResetVariables;
     }
 }

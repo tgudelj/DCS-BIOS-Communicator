@@ -1,5 +1,5 @@
 ﻿namespace DCSMATRICFeeder {
-    partial class frmMain {
+    partial class FormMain {
         /// <summary>
         ///  Required designer variable.
         /// </summary>
@@ -23,7 +23,7 @@
         ///  the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             txtBIOSListenPort = new NumericUpDown();
             lblBiosListenIP = new Label();
             txtListenIp = new ComboBox();

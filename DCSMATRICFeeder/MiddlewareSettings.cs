@@ -2,11 +2,12 @@
     /// <summary>
     /// Represents DCS-BIOS MATRIC middleware configuration
     /// </summary>
-    internal class MiddlewareConfig {
-        public MiddlewareConfig() {
+    internal class MiddlewareSettings {
+        public MiddlewareSettings() {
             ListenAddress = "239.255.50.10";
             ListenPort = 5010;
             DCSBIOSJsonPath = "";
+            AircraftVariables = new Dictionary<string, List<string>>();
         }
 
         /// <summary>
@@ -23,5 +24,12 @@
         /// Path to DCS-BIOS doc/json directory, default is "%userprofile%/Saved Games/DCS.openbeta/Scripts/DCS-BIOS/doc/json/"
         /// </summary>
         public string DCSBIOSJsonPath {  get; set; }
+
+        /// <summary>
+        /// Chosen variables list per aircraft
+        /// key - aircraft name
+        /// value - list of variables to forward to MATRIC
+        /// </summary>
+        public Dictionary<string, List<string>> AircraftVariables { get; set; }
     }
 }

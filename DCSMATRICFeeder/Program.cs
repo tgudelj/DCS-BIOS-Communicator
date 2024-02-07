@@ -9,13 +9,13 @@ namespace DCSMATRICFeeder {
         internal static ILoggerFactory loggerFactory;
         internal static ILogger logger;
         internal static Dictionary<string, AircraftBiosConfiguration> aircraftBiosConfigurations = new Dictionary<string, AircraftBiosConfiguration>();
-
+        internal static MiddlewareSettings mwSettings = new MiddlewareSettings();
         [STAThread]
         static void Main() {
             if (Debugger.IsAttached) {
                 Settings.Default.Reset();
-            }                
-            loggerFactory = LoggerFactory.Create(builder => {
+            }
+            loggerFactory = Microsoft.Extensions.Logging.LoggerFactory.Create(builder => {
                 builder
                 .AddConsole()
                 .AddDebug();
@@ -27,7 +27,7 @@ namespace DCSMATRICFeeder {
             Application.SetCompatibleTextRenderingDefault(false);
 
             ApplicationConfiguration.Initialize();
-            Application.Run(new frmMain());
+            Application.Run(new FormMain());
         }
     }
 }

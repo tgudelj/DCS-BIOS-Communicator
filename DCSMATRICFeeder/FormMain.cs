@@ -1,18 +1,18 @@
 using DcsBios.Communicator;
 using DcsBios.Communicator.Configuration;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System.Net;
 using System.Text.Json.Nodes;
 
 namespace DCSMATRICFeeder {
-    public partial class frmMain : Form {
+    public partial class FormMain : Form {
 
         bool _isRunning = false;
-        MiddlewareConfig _appConfig;
         MatricDCSTranslator translator;
         BiosUdpClient biosClient;
         BiosListener biosListener;
-        public frmMain() {
+        public FormMain() {
             InitializeComponent();
         }
 
@@ -23,8 +23,6 @@ namespace DCSMATRICFeeder {
                 txtDCSBiosInstancePath.Text = dlgFindDCS.SelectedPath;
             }
         }
-
-
 
         private void Translator_UpdateBufferSizeNotification(object? sender, MatricDCSTranslator.TxRxNotificationEventArgs e) {
             if (pbBuffer.InvokeRequired) {
@@ -51,8 +49,8 @@ namespace DCSMATRICFeeder {
             foreach (string biosPath in biosPaths) {
                 txtDCSBiosInstancePath.Items.Add(biosPath);
             }
-            if (Directory.Exists(_appConfig.DCSBIOSJsonPath)) {
-                txtDCSBiosInstancePath.Text = _appConfig.DCSBIOSJsonPath;
+            if (Directory.Exists(Program.mwSettings.DCSBIOSJsonPath)) {
+                txtDCSBiosInstancePath.Text = Program.mwSettings.DCSBIOSJsonPath;
             }
             else {
                 if (biosPaths.Count > 0) {
@@ -116,20 +114,31 @@ namespace DCSMATRICFeeder {
         }
 
         private void LoadSettings() {
-            _appConfig = new MiddlewareConfig() {
+            Program.mwSettings = new MiddlewareSettings() {
                 ListenAddress = Properties.Settings.Default.ListenAddress,
                 ListenPort = Properties.Settings.Default.ListenPort,
                 DCSBIOSJsonPath = Properties.Settings.Default.DCSBIOSJsonPath
             };
-            txtBIOSListenPort.Value = _appConfig.ListenPort;
-            txtListenIp.Text = _appConfig.ListenAddress;
-            txtDCSBiosInstancePath.Text = _appConfig.DCSBIOSJsonPath;
+            if (string.IsNullOrEmpty(Properties.Settings.Default.AircraftVariables)) {
+                Program.mwSettings.AircraftVariables = new Dictionary<string, List<string>>();
+            } else {
+                try {
+                    Program.mwSettings.AircraftVariables = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(Properties.Settings.Default.AircraftVariables);
+                } catch (Exception ex) {
+                    MessageBox.Show($@"Could not deserialize AircraftVariable settings", "Load settings exception", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    Program.mwSettings.AircraftVariables = new Dictionary<string, List<string>>();
+                }
+            }
+            txtBIOSListenPort.Value = Program.mwSettings.ListenPort;
+            txtListenIp.Text = Program.mwSettings.ListenAddress;
+            txtDCSBiosInstancePath.Text = Program.mwSettings.DCSBIOSJsonPath;
         }
 
         private void SaveSettings() {
-            Properties.Settings.Default.ListenAddress = _appConfig.ListenAddress;
-            Properties.Settings.Default.ListenPort = _appConfig.ListenPort;
-            Properties.Settings.Default.DCSBIOSJsonPath = _appConfig.DCSBIOSJsonPath;
+            Properties.Settings.Default.ListenAddress = Program.mwSettings.ListenAddress;
+            Properties.Settings.Default.ListenPort = Program.mwSettings.ListenPort;
+            Properties.Settings.Default.DCSBIOSJsonPath = Program.mwSettings.DCSBIOSJsonPath;
+            Properties.Settings.Default.AircraftVariables = JsonConvert.SerializeObject(Program.mwSettings.AircraftVariables);
             Properties.Settings.Default.Save();
         }
 
@@ -181,8 +190,8 @@ namespace DCSMATRICFeeder {
                 MessageBox.Show($@"Path ""{txtDCSBiosInstancePath.Text}"" doesn't exist.", "Invalid configuration", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
-            _appConfig.DCSBIOSJsonPath = txtDCSBiosInstancePath.Text;
-            _appConfig.ListenPort = (int)txtBIOSListenPort.Value;
+            Program.mwSettings.DCSBIOSJsonPath = txtDCSBiosInstancePath.Text;
+            Program.mwSettings.ListenPort = (int)txtBIOSListenPort.Value;
 
 
             (bool matricIntegrationEnabled, int matricIntegrationPort) = GetMatricConfig();
@@ -193,14 +202,14 @@ namespace DCSMATRICFeeder {
             }
 
             // create a new UDP client for talking to DCS-BIOS
-            biosClient = new BiosUdpClient(IPAddress.Parse(_appConfig.ListenAddress), 7778, _appConfig.ListenPort, Program.loggerFactory.CreateLogger<BiosUdpClient>());
+            biosClient = new BiosUdpClient(IPAddress.Parse(Program.mwSettings.ListenAddress), 7778, Program.mwSettings.ListenPort, Program.loggerFactory.CreateLogger<BiosUdpClient>());
             biosClient.OpenConnection();
             translator = new MatricDCSTranslator(matricIntegrationPort, Program.logger);
             translator.UpdateSentNotification += Translator_UpdateSentNotification;
             translator.UpdateBufferSizeNotification += Translator_UpdateBufferSizeNotification;
 
             biosListener = new BiosListener(biosClient, translator, Program.loggerFactory.CreateLogger<BiosListener>());
-            AircraftBiosConfiguration[] aircraftConfigs = await LoadDCSBiosConfig(_appConfig.DCSBIOSJsonPath);
+            AircraftBiosConfiguration[] aircraftConfigs = await LoadDCSBiosConfig(Program.mwSettings.DCSBIOSJsonPath);
             foreach (AircraftBiosConfiguration config in aircraftConfigs) {                
                 biosListener.RegisterConfiguration(config);
             }

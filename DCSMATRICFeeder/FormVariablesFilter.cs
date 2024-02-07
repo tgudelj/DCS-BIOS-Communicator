@@ -27,11 +27,18 @@ namespace DCSMATRICFeeder {
                 return;
             }
             txtFilter.Text = "";
-            foreach (KeyValuePair<string, DcsBios.Communicator.Configuration.BiosCategory> category in Program.aircraftBiosConfigurations[ddAircraft.SelectedItem.ToString()]) {
-                foreach (string variableName in category.Value.Keys) {
-                    txtFilter.Text += variableName + Environment.NewLine;
+            if (Program.mwSettings.AircraftVariables.ContainsKey(ddAircraft.SelectedItem.ToString())) {
+                foreach (string varName in Program.mwSettings.AircraftVariables[ddAircraft.SelectedItem.ToString()]) {
+                    txtFilter.Text += varName + Environment.NewLine;
+                }
+            } else {
+                foreach (KeyValuePair<string, DcsBios.Communicator.Configuration.BiosCategory> category in Program.aircraftBiosConfigurations[ddAircraft.SelectedItem.ToString()]) {
+                    foreach (string variableName in category.Value.Keys) {
+                        txtFilter.Text += variableName + Environment.NewLine;
+                    }
                 }
             }
+            txtFilter.Text = txtFilter.Text.TrimEnd();
         }
 
         private void btnCancel_Click(object sender, EventArgs e) {
@@ -39,7 +46,28 @@ namespace DCSMATRICFeeder {
         }
 
         private void btnSave_Click(object sender, EventArgs e) {
+            txtFilter.Text = txtFilter.Text.TrimEnd();
+            List<string> variablesList = txtFilter.Text.Split(Environment.NewLine).ToList<string>();
+            if (Program.mwSettings.AircraftVariables.ContainsKey(ddAircraft.SelectedItem.ToString())) {
+                Program.mwSettings.AircraftVariables[ddAircraft.SelectedItem.ToString()] = variablesList;
+            } else {
+                Program.mwSettings.AircraftVariables.Add(ddAircraft.SelectedItem.ToString(), variablesList);
+            }
             this.Close();
+        }
+
+        private void btnResetVariables_Click(object sender, EventArgs e) {
+            txtFilter.Text = "";
+            foreach (KeyValuePair<string, DcsBios.Communicator.Configuration.BiosCategory> category in Program.aircraftBiosConfigurations[ddAircraft.SelectedItem.ToString()]) {
+                foreach (string variableName in category.Value.Keys) {
+                    txtFilter.Text += variableName + Environment.NewLine;
+                }
+            }
+            txtFilter.Text = txtFilter.Text.TrimEnd();
+        }
+
+        private void lblAircraft_Click(object sender, EventArgs e) {
+            ddAircraft.Focus();
         }
     }
 }
