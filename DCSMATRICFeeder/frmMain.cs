@@ -24,6 +24,43 @@ namespace DCSMATRICFeeder {
             }
         }
 
+
+
+        private void Translator_UpdateBufferSizeNotification(object? sender, MatricDCSTranslator.TxRxNotificationEventArgs e) {
+            if (pbBuffer.InvokeRequired) {
+                pbBuffer.Invoke(new Action(() => pbBuffer.Value = e.Count));
+            }
+            else {
+                pbBuffer.Value = e.Count;
+            }
+        }
+
+        private void Translator_UpdateSentNotification(object? sender, MatricDCSTranslator.TxRxNotificationEventArgs e) {
+            if (pbSentVars.InvokeRequired) {
+                pbSentVars.Invoke(new Action(() => pbSentVars.Value = e.Count));
+            }
+            else {
+                pbSentVars.Value = e.Count;
+            }
+        }
+
+        private void frmMain_Load(object sender, EventArgs e) {
+            LoadSettings();
+            //Populate list of DCS-BIOS instances
+            List<string> biosPaths = GetDCSBiosPaths(GetDCSUserPaths());
+            foreach (string biosPath in biosPaths) {
+                txtDCSBiosInstancePath.Items.Add(biosPath);
+            }
+            if (Directory.Exists(_appConfig.DCSBIOSJsonPath)) {
+                txtDCSBiosInstancePath.Text = _appConfig.DCSBIOSJsonPath;
+            }
+            else {
+                if (biosPaths.Count > 0) {
+                    txtDCSBiosInstancePath.Text = biosPaths.FirstOrDefault();
+                }
+            }
+        }
+
         /// <summary>
         /// Searches the registry and returns detected DCS user directories in Saved Games
         /// </summary>
@@ -50,7 +87,6 @@ namespace DCSMATRICFeeder {
         List<string> GetDCSBiosPaths(List<string> dcsInstallPaths) {
             List<string> dcsBiosConfigPaths = new List<string>();
             foreach (string dcsPath in dcsInstallPaths) {
-                //string path = Path.Combine(dcsPath, @"\Scripts\DCS-BIOS\doc\json");
                 string path = Path.Combine(dcsPath, "Scripts", "DCS-BIOS", "doc", "json");
                 if (Directory.Exists(path)) {
                     dcsBiosConfigPaths.Add(path);
@@ -77,103 +113,6 @@ namespace DCSMATRICFeeder {
                 Program.logger.LogError($"Couldn't read MATRIC configuration {e.Message}");
             }
             return (enabled, port);
-        }
-
-        async void ToggleProcessing() {
-            if (_isRunning) {
-                biosClient.Close();
-                biosListener.Stop();
-
-                //biosListener.Dispose();
-                translator.UpdateSentNotification -= Translator_UpdateSentNotification;
-                translator.UpdateBufferSizeNotification -= Translator_UpdateBufferSizeNotification;
-                translator.Dispose();
-                _isRunning = false;
-                btnStartStop.Text = "START";
-                return;
-            }
-
-            //check DCS
-            if (!Directory.Exists(txtDCSBiosInstancePath.Text)) {
-                MessageBox.Show($@"Path ""{txtDCSBiosInstancePath.Text}"" doesn't exist.", "Invalid configuration", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                return;
-            }
-            _appConfig.DCSBIOSJsonPath = txtDCSBiosInstancePath.Text;
-            _appConfig.ListenPort = (int)txtBIOSListenPort.Value;
-
-            (bool matricIntegrationEnabled, int matricIntegrationPort) = GetMatricConfig();
-
-            if (!matricIntegrationEnabled) {
-                MessageBox.Show($@"MATRIC integration is not enabled, please enable it in MATRIC settings and restart MATRIC Server", "MATRIC configuration", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                return;
-            }
-
-            // create a new UDP client for talking to DCS-BIOS
-            biosClient = new BiosUdpClient(IPAddress.Parse(_appConfig.ListenAddress), 7778, _appConfig.ListenPort, Program.loggerFactory.CreateLogger<BiosUdpClient>());
-            biosClient.OpenConnection();
-            translator = new MatricDCSTranslator(matricIntegrationPort, Program.logger);
-            translator.UpdateSentNotification += Translator_UpdateSentNotification;
-            translator.UpdateBufferSizeNotification += Translator_UpdateBufferSizeNotification;
-
-            biosListener = new BiosListener(biosClient, translator, Program.loggerFactory.CreateLogger<BiosListener>());
-
-            foreach (AircraftBiosConfiguration config in await AircraftBiosConfiguration.AllConfigurations("AircraftAliases.json", null, _appConfig.DCSBIOSJsonPath)) {
-                Program.aircraftBiosConfigurations.Add(config.AircraftName, config);
-                biosListener.RegisterConfiguration(config);
-            }
-
-            //Save settings
-            SaveSettings();
-
-            // start the listener
-            biosListener.Start();
-            _isRunning = true;
-            btnStartStop.Text = "STOP";
-        }
-
-        private async void LoadDCSBiosConfig() {
-            foreach (AircraftBiosConfiguration config in await AircraftBiosConfiguration.AllConfigurations("AircraftAliases.json", null, _appConfig.DCSBIOSJsonPath)) {
-                Program.aircraftBiosConfigurations.Add(config.AircraftName, config);
-            }
-        }
-
-        private void Translator_UpdateBufferSizeNotification(object? sender, MatricDCSTranslator.TxRxNotificationEventArgs e) {
-            if (pbBuffer.InvokeRequired) {
-                pbBuffer.Invoke(new Action(() => pbBuffer.Value = e.Count));
-            }
-            else {
-                pbBuffer.Value = e.Count;
-            }
-        }
-
-        private void Translator_UpdateSentNotification(object? sender, MatricDCSTranslator.TxRxNotificationEventArgs e) {
-            if (pbSentVars.InvokeRequired) {
-                pbSentVars.Invoke(new Action(() => pbSentVars.Value = e.Count));
-            }
-            else {
-                pbSentVars.Value = e.Count;
-            }
-        }
-
-        private void btnStartStop_Click(object sender, EventArgs e) {
-            ToggleProcessing();
-        }
-
-        private void frmMain_Load(object sender, EventArgs e) {
-            LoadSettings();
-            //Populate list of DCS-BIOS instances
-            List<string> biosPaths = GetDCSBiosPaths(GetDCSUserPaths());
-            foreach (string biosPath in biosPaths) {
-                txtDCSBiosInstancePath.Items.Add(biosPath);
-            }
-            if (Directory.Exists(_appConfig.DCSBIOSJsonPath)) {
-                txtDCSBiosInstancePath.Text = _appConfig.DCSBIOSJsonPath;
-            }
-            else {
-                if (biosPaths.Count > 0) {
-                    txtDCSBiosInstancePath.Text = biosPaths.FirstOrDefault();
-                }
-            }
         }
 
         private void LoadSettings() {
@@ -206,9 +145,83 @@ namespace DCSMATRICFeeder {
             txtDCSBiosInstancePath.Focus();
         }
 
-        private void btnFilterDialog_Click(object sender, EventArgs e) {
+        private void btnStartStop_Click(object sender, EventArgs e) {
+            ToggleProcessing();
+        }
+
+        /// <summary>
+        /// Loads all configurations from json files
+        /// </summary>
+        /// <param name="path">Path to directory containing json files</param>
+        private async Task<AircraftBiosConfiguration[]> LoadDCSBiosConfig(string path) {
+            AircraftBiosConfiguration[] configurations = await AircraftBiosConfiguration.AllConfigurations("AircraftAliases.json", null, path);
+            Program.aircraftBiosConfigurations.Clear();
+            foreach (var config in configurations) { 
+                Program.aircraftBiosConfigurations.Add(config.AircraftName, config);
+            }
+            return configurations;
+        }
+
+        async void ToggleProcessing() {
+            if (_isRunning) {
+                biosClient.Close();
+                biosListener.Stop();
+
+                //biosListener.Dispose();
+                translator.UpdateSentNotification -= Translator_UpdateSentNotification;
+                translator.UpdateBufferSizeNotification -= Translator_UpdateBufferSizeNotification;
+                translator.Dispose();
+                _isRunning = false;
+                btnStartStop.Text = "START";
+                return;
+            }
+
+            //check DCS
+            if (!Directory.Exists(txtDCSBiosInstancePath.Text)) {
+                MessageBox.Show($@"Path ""{txtDCSBiosInstancePath.Text}"" doesn't exist.", "Invalid configuration", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+            _appConfig.DCSBIOSJsonPath = txtDCSBiosInstancePath.Text;
+            _appConfig.ListenPort = (int)txtBIOSListenPort.Value;
+
+
+            (bool matricIntegrationEnabled, int matricIntegrationPort) = GetMatricConfig();
+
+            if (!matricIntegrationEnabled) {
+                MessageBox.Show($@"MATRIC integration is not enabled, please enable it in MATRIC settings and restart MATRIC Server", "MATRIC configuration", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+
+            // create a new UDP client for talking to DCS-BIOS
+            biosClient = new BiosUdpClient(IPAddress.Parse(_appConfig.ListenAddress), 7778, _appConfig.ListenPort, Program.loggerFactory.CreateLogger<BiosUdpClient>());
+            biosClient.OpenConnection();
+            translator = new MatricDCSTranslator(matricIntegrationPort, Program.logger);
+            translator.UpdateSentNotification += Translator_UpdateSentNotification;
+            translator.UpdateBufferSizeNotification += Translator_UpdateBufferSizeNotification;
+
+            biosListener = new BiosListener(biosClient, translator, Program.loggerFactory.CreateLogger<BiosListener>());
+            AircraftBiosConfiguration[] aircraftConfigs = await LoadDCSBiosConfig(_appConfig.DCSBIOSJsonPath);
+            foreach (AircraftBiosConfiguration config in aircraftConfigs) {                
+                biosListener.RegisterConfiguration(config);
+            }
+
+            //Save settings
+            SaveSettings();
+
+            // start the listener
+            biosListener.Start();
+            _isRunning = true;
+            btnStartStop.Text = "STOP";
+        }
+
+        private async void btnFilterDialog_Click(object sender, EventArgs e) {
+            if (!Directory.Exists(txtDCSBiosInstancePath.Text)) {
+                MessageBox.Show($@"Path ""{txtDCSBiosInstancePath.Text}"" doesn't exist.", "Invalid configuration", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+            _ = await LoadDCSBiosConfig(txtDCSBiosInstancePath.Text);
             FormVariablesFilter frmVars = new FormVariablesFilter();
-            frmVars.ShowDialog();
+            frmVars.ShowDialog();           
         }
     }
 }
