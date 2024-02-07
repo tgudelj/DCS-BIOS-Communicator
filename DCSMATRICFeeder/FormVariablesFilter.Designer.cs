@@ -30,11 +30,20 @@
             label1 = new Label();
             btnSave = new Button();
             btnCancel = new Button();
-            btnResetVariables = new Button();
+            lblAvailable = new Label();
+            lstAvailableVariables = new ListBox();
+            lblCategory = new Label();
+            ddCategory = new ComboBox();
+            lstConfiguredVariables = new ListBox();
+            btnAddSelected = new Button();
+            btnRemoveSelected = new Button();
+            btnAddAll = new Button();
+            btnRemoveAll = new Button();
             SuspendLayout();
             // 
             // ddAircraft
             // 
+            ddAircraft.DropDownStyle = ComboBoxStyle.DropDownList;
             ddAircraft.Font = new Font("Segoe UI", 10F);
             ddAircraft.FormattingEnabled = true;
             ddAircraft.Location = new Point(198, 8);
@@ -58,19 +67,19 @@
             txtFilter.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             txtFilter.BorderStyle = BorderStyle.FixedSingle;
             txtFilter.Font = new Font("Segoe UI", 10F);
-            txtFilter.Location = new Point(12, 74);
+            txtFilter.Location = new Point(486, 8);
             txtFilter.Multiline = true;
             txtFilter.Name = "txtFilter";
             txtFilter.ScrollBars = ScrollBars.Vertical;
-            txtFilter.Size = new Size(786, 377);
+            txtFilter.Size = new Size(302, 52);
             txtFilter.TabIndex = 15;
             // 
             // label1
             // 
             label1.Font = new Font("Segoe UI", 10F);
-            label1.Location = new Point(12, 49);
+            label1.Location = new Point(474, 84);
             label1.Name = "label1";
-            label1.Size = new Size(427, 22);
+            label1.Size = new Size(302, 22);
             label1.TabIndex = 16;
             label1.Text = "Variables to export from DCS-BIOS to MATRIC";
             // 
@@ -98,24 +107,114 @@
             btnCancel.UseVisualStyleBackColor = true;
             btnCancel.Click += btnCancel_Click;
             // 
-            // btnResetVariables
+            // lblAvailable
             // 
-            btnResetVariables.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btnResetVariables.Font = new Font("Segoe UI", 10F);
-            btnResetVariables.Location = new Point(590, 9);
-            btnResetVariables.Name = "btnResetVariables";
-            btnResetVariables.Size = new Size(198, 37);
-            btnResetVariables.TabIndex = 19;
-            btnResetVariables.Text = "Reset variables";
-            btnResetVariables.UseVisualStyleBackColor = true;
-            btnResetVariables.Click += btnResetVariables_Click;
+            lblAvailable.Font = new Font("Segoe UI", 10F);
+            lblAvailable.Location = new Point(12, 84);
+            lblAvailable.Name = "lblAvailable";
+            lblAvailable.Size = new Size(286, 22);
+            lblAvailable.TabIndex = 20;
+            lblAvailable.Text = "Available variables";
+            // 
+            // lstAvailableVariables
+            // 
+            lstAvailableVariables.FormattingEnabled = true;
+            lstAvailableVariables.ItemHeight = 15;
+            lstAvailableVariables.Location = new Point(14, 109);
+            lstAvailableVariables.Name = "lstAvailableVariables";
+            lstAvailableVariables.SelectionMode = SelectionMode.MultiExtended;
+            lstAvailableVariables.Size = new Size(343, 334);
+            lstAvailableVariables.TabIndex = 21;
+            // 
+            // lblCategory
+            // 
+            lblCategory.Font = new Font("Segoe UI", 10F);
+            lblCategory.Location = new Point(12, 49);
+            lblCategory.Name = "lblCategory";
+            lblCategory.Size = new Size(180, 22);
+            lblCategory.TabIndex = 23;
+            lblCategory.Text = "Category";
+            lblCategory.Click += lblCategory_Click;
+            // 
+            // ddCategory
+            // 
+            ddCategory.DropDownStyle = ComboBoxStyle.DropDownList;
+            ddCategory.Font = new Font("Segoe UI", 10F);
+            ddCategory.FormattingEnabled = true;
+            ddCategory.Location = new Point(198, 49);
+            ddCategory.Name = "ddCategory";
+            ddCategory.Size = new Size(241, 25);
+            ddCategory.TabIndex = 22;
+            ddCategory.SelectedIndexChanged += ddCategory_SelectedIndexChanged;
+            // 
+            // lstConfiguredVariables
+            // 
+            lstConfiguredVariables.FormattingEnabled = true;
+            lstConfiguredVariables.ItemHeight = 15;
+            lstConfiguredVariables.Location = new Point(445, 109);
+            lstConfiguredVariables.Name = "lstConfiguredVariables";
+            lstConfiguredVariables.SelectionMode = SelectionMode.MultiExtended;
+            lstConfiguredVariables.Size = new Size(343, 334);
+            lstConfiguredVariables.TabIndex = 24;
+            // 
+            // btnAddSelected
+            // 
+            btnAddSelected.Font = new Font("Segoe UI", 12F);
+            btnAddSelected.Location = new Point(375, 137);
+            btnAddSelected.Name = "btnAddSelected";
+            btnAddSelected.Size = new Size(46, 46);
+            btnAddSelected.TabIndex = 25;
+            btnAddSelected.Text = ">";
+            btnAddSelected.UseVisualStyleBackColor = true;
+            btnAddSelected.Click += btnAddSelected_Click;
+            // 
+            // btnRemoveSelected
+            // 
+            btnRemoveSelected.Font = new Font("Segoe UI", 12F);
+            btnRemoveSelected.Location = new Point(375, 370);
+            btnRemoveSelected.Name = "btnRemoveSelected";
+            btnRemoveSelected.Size = new Size(46, 46);
+            btnRemoveSelected.TabIndex = 26;
+            btnRemoveSelected.Text = "<";
+            btnRemoveSelected.UseVisualStyleBackColor = true;
+            btnRemoveSelected.Click += btnRemoveSelected_Click;
+            // 
+            // btnAddAll
+            // 
+            btnAddAll.Font = new Font("Segoe UI", 12F);
+            btnAddAll.Location = new Point(375, 193);
+            btnAddAll.Name = "btnAddAll";
+            btnAddAll.Size = new Size(46, 46);
+            btnAddAll.TabIndex = 27;
+            btnAddAll.Text = ">>";
+            btnAddAll.UseVisualStyleBackColor = true;
+            btnAddAll.Click += btnAddAll_Click;
+            // 
+            // btnRemoveAll
+            // 
+            btnRemoveAll.Font = new Font("Segoe UI", 12F);
+            btnRemoveAll.Location = new Point(375, 318);
+            btnRemoveAll.Name = "btnRemoveAll";
+            btnRemoveAll.Size = new Size(46, 46);
+            btnRemoveAll.TabIndex = 28;
+            btnRemoveAll.Text = "<<";
+            btnRemoveAll.UseVisualStyleBackColor = true;
+            btnRemoveAll.Click += btnRemoveAll_Click;
             // 
             // FormVariablesFilter
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 506);
-            Controls.Add(btnResetVariables);
+            Controls.Add(btnRemoveAll);
+            Controls.Add(btnAddAll);
+            Controls.Add(btnRemoveSelected);
+            Controls.Add(btnAddSelected);
+            Controls.Add(lstConfiguredVariables);
+            Controls.Add(lblCategory);
+            Controls.Add(ddCategory);
+            Controls.Add(lstAvailableVariables);
+            Controls.Add(lblAvailable);
             Controls.Add(btnCancel);
             Controls.Add(btnSave);
             Controls.Add(label1);
@@ -141,6 +240,14 @@
         private Label label1;
         private Button btnSave;
         private Button btnCancel;
-        private Button btnResetVariables;
+        private Label lblAvailable;
+        private ListBox lstAvailableVariables;
+        private Label lblCategory;
+        private ComboBox ddCategory;
+        private ListBox lstConfiguredVariables;
+        private Button btnAddSelected;
+        private Button btnRemoveSelected;
+        private Button btnAddAll;
+        private Button btnRemoveAll;
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,35 +11,80 @@ using System.Windows.Forms;
 
 namespace DCSMATRICFeeder {
     public partial class FormVariablesFilter : Form {
-
-        internal List<string> AllVariablesForAircraft = new List<string>();
+        internal BindingList<string> _aircraftList = new BindingList<string>();
+        internal BindingList<string> _categoriesList = new BindingList<string>();
+        internal BindingList<string> _availableVariables = new BindingList<string>();
+        internal BindingList<string> _configuredVariables = new BindingList<string>();
+        internal Dictionary<string, List<string>> _tempConfig = new Dictionary<string, List<string>>();
+        internal string _currentAircraftId;
+        const string ALL_ITEMS = "-- ALL --";
 
         public FormVariablesFilter() {
             InitializeComponent();
         }
 
         private void FormVariablesFilter_Load(object sender, EventArgs e) {
-            ddAircraft.DataSource = Program.aircraftBiosConfigurations.Keys.ToList<string>();
-            ddAircraft.DisplayMember = "AircraftName";
+            _aircraftList = new BindingList<string>(Program.aircraftBiosConfigurations.Keys.ToList<string>());
+            ddAircraft.DataSource = _aircraftList;
+            ddCategory.DataSource = _categoriesList;
+            lstAvailableVariables.DataSource = _availableVariables;
+            lstConfiguredVariables.DataSource = _configuredVariables;
+            //Copies current settings
+            foreach (KeyValuePair<string, List<string>> item in Program.mwSettings.AircraftVariables) {
+                _tempConfig.Add(item.Key, item.Value);
+            }
         }
 
+        //Selected aircraft
         private void ddAircraft_SelectedIndexChanged(object sender, EventArgs e) {
             if (!Program.aircraftBiosConfigurations.ContainsKey(ddAircraft.SelectedItem.ToString())) {
                 return;
             }
-            txtFilter.Text = "";
-            if (Program.mwSettings.AircraftVariables.ContainsKey(ddAircraft.SelectedItem.ToString())) {
-                foreach (string varName in Program.mwSettings.AircraftVariables[ddAircraft.SelectedItem.ToString()]) {
-                    txtFilter.Text += varName + Environment.NewLine;
-                }
-            } else {
-                foreach (KeyValuePair<string, DcsBios.Communicator.Configuration.BiosCategory> category in Program.aircraftBiosConfigurations[ddAircraft.SelectedItem.ToString()]) {
-                    foreach (string variableName in category.Value.Keys) {
-                        txtFilter.Text += variableName + Environment.NewLine;
-                    }
+            _currentAircraftId = ddAircraft.SelectedItem.ToString();
+
+            _categoriesList.Clear();
+            _categoriesList.Add(ALL_ITEMS);
+            foreach (string categoryName in Program.aircraftBiosConfigurations[_currentAircraftId].Keys.ToList<string>()) {
+                _categoriesList.Add(categoryName);
+            }
+            _availableVariables.Clear();
+
+            //Configured variables
+            _configuredVariables.Clear();
+            if(!_tempConfig.ContainsKey(_currentAircraftId)) {
+                _tempConfig.Add(_currentAircraftId, new List<string>());
+            }
+
+            foreach (string varName in _tempConfig[_currentAircraftId]) { 
+                _configuredVariables.Add(varName);
+            }
+        }
+
+        //Selected category
+        private void ddCategory_SelectedIndexChanged(object sender, EventArgs e) {
+            if (ddCategory.SelectedIndex == -1) {
+                return;
+            }
+            _availableVariables.Clear();
+            foreach (string variableName in GetVariablesForCategory(ddCategory.SelectedItem.ToString())) {
+                if (!_configuredVariables.Contains(variableName)) {
+                    _availableVariables.Add(variableName);
                 }
             }
-            txtFilter.Text = txtFilter.Text.TrimEnd();
+        }
+
+        private List<string> GetVariablesForCategory(string categoryName) {
+            if (Program.aircraftBiosConfigurations[_currentAircraftId].ContainsKey(categoryName)) {
+                return Program.aircraftBiosConfigurations[_currentAircraftId][categoryName].Keys.ToList<string>();
+            }
+            if (categoryName == ALL_ITEMS || string.IsNullOrEmpty(categoryName)) {
+                List<string> result = new List<string>();
+                foreach (string category in Program.aircraftBiosConfigurations[_currentAircraftId].Keys) {
+                    result.AddRange(Program.aircraftBiosConfigurations[_currentAircraftId][category].Keys.ToList<string>());
+                }
+                return result;
+            }
+            return new List<string>();
         }
 
         private void btnCancel_Click(object sender, EventArgs e) {
@@ -46,28 +92,67 @@ namespace DCSMATRICFeeder {
         }
 
         private void btnSave_Click(object sender, EventArgs e) {
-            txtFilter.Text = txtFilter.Text.TrimEnd();
-            List<string> variablesList = txtFilter.Text.Split(Environment.NewLine).ToList<string>();
-            if (Program.mwSettings.AircraftVariables.ContainsKey(ddAircraft.SelectedItem.ToString())) {
-                Program.mwSettings.AircraftVariables[ddAircraft.SelectedItem.ToString()] = variablesList;
-            } else {
-                Program.mwSettings.AircraftVariables.Add(ddAircraft.SelectedItem.ToString(), variablesList);
-            }
+            Program.mwSettings.AircraftVariables = _tempConfig;
+            Properties.Settings.Default.AircraftVariables = JsonConvert.SerializeObject(Program.mwSettings.AircraftVariables);
+            Properties.Settings.Default.Save();
             this.Close();
-        }
-
-        private void btnResetVariables_Click(object sender, EventArgs e) {
-            txtFilter.Text = "";
-            foreach (KeyValuePair<string, DcsBios.Communicator.Configuration.BiosCategory> category in Program.aircraftBiosConfigurations[ddAircraft.SelectedItem.ToString()]) {
-                foreach (string variableName in category.Value.Keys) {
-                    txtFilter.Text += variableName + Environment.NewLine;
-                }
-            }
-            txtFilter.Text = txtFilter.Text.TrimEnd();
         }
 
         private void lblAircraft_Click(object sender, EventArgs e) {
             ddAircraft.Focus();
+        }
+
+        private void lblCategory_Click(object sender, EventArgs e) {
+            ddCategory.Focus();
+        }
+
+        private void btnAddSelected_Click(object sender, EventArgs e) {
+            foreach(string varName in lstAvailableVariables.SelectedItems) {
+                _configuredVariables.Add(varName);
+            }
+            foreach (string varName in _configuredVariables) { 
+                _availableVariables.Remove(varName);
+            }
+            lstAvailableVariables.SelectedIndex = -1;
+        }
+
+        private void btnAddAll_Click(object sender, EventArgs e) {
+            foreach (string varName in _availableVariables) {
+                _configuredVariables.Add(varName);
+            }
+            foreach (string varName in _configuredVariables) {
+                _availableVariables.Remove(varName);
+            }
+            lstAvailableVariables.SelectedIndex = -1;
+        }
+
+        private void btnRemoveAll_Click(object sender, EventArgs e) {
+            _configuredVariables.Clear();
+            lstConfiguredVariables.SelectedIndex = -1;
+            //Restore available variables for selected category
+            _availableVariables.Clear();
+            foreach (string variableName in GetVariablesForCategory(ddCategory.SelectedItem.ToString())) {
+                if (!_configuredVariables.Contains(variableName)) {
+                    _availableVariables.Add(variableName);
+                }
+            }
+        }
+
+        private void btnRemoveSelected_Click(object sender, EventArgs e) {
+            List<string> toRemove = new List<string>();
+            foreach(string varName in lstConfiguredVariables.SelectedItems) { 
+                toRemove.Add(varName);
+            }
+            foreach (string varName in toRemove) {
+                _configuredVariables.Remove(varName);
+            }
+            //Restore available variables for selected category
+            _availableVariables.Clear();
+            foreach (string variableName in GetVariablesForCategory(ddCategory.SelectedItem.ToString())) {
+                if (!_configuredVariables.Contains(variableName)) {
+                    _availableVariables.Add(variableName);
+                }
+            }
         }
     }
 }
