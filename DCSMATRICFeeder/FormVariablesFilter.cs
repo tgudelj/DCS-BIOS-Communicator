@@ -30,6 +30,7 @@ namespace DCSMATRICFeeder {
             lstAvailableVariables.DataSource = _availableVariables;
             lstConfiguredVariables.DataSource = _configuredVariables;
             //Copies current settings
+            _tempConfig = new Dictionary<string, List<string>>();
             foreach (KeyValuePair<string, List<string>> item in Program.mwSettings.AircraftVariables) {
                 _tempConfig.Add(item.Key, item.Value);
             }
@@ -92,6 +93,16 @@ namespace DCSMATRICFeeder {
         }
 
         private void btnSave_Click(object sender, EventArgs e) {
+            //Copy temporary settings to settings that persist
+            foreach(var acName in _tempConfig.Keys) {
+                if (!Program.mwSettings.AircraftVariables.ContainsKey(acName)){
+                    Program.mwSettings.AircraftVariables.Add(acName, new List<string>());
+                }
+                Program.mwSettings.AircraftVariables[acName].Clear();
+                foreach (string varName in _tempConfig[acName]) {
+                    Program.mwSettings.AircraftVariables[acName].Add(varName);
+                }
+            }
             Program.mwSettings.AircraftVariables = _tempConfig;
             Properties.Settings.Default.AircraftVariables = JsonConvert.SerializeObject(Program.mwSettings.AircraftVariables);
             Properties.Settings.Default.Save();
@@ -114,16 +125,20 @@ namespace DCSMATRICFeeder {
                 _availableVariables.Remove(varName);
             }
             lstAvailableVariables.SelectedIndex = -1;
+            if (!_tempConfig.ContainsKey(_currentAircraftId)) { _tempConfig.Add(_currentAircraftId, new List<string>()); }
+            _tempConfig[_currentAircraftId].Clear();
+            _tempConfig[_currentAircraftId].AddRange(_configuredVariables);
         }
 
         private void btnAddAll_Click(object sender, EventArgs e) {
             foreach (string varName in _availableVariables) {
                 _configuredVariables.Add(varName);
             }
-            foreach (string varName in _configuredVariables) {
-                _availableVariables.Remove(varName);
-            }
+            _availableVariables.Clear();
             lstAvailableVariables.SelectedIndex = -1;
+            if(!_tempConfig.ContainsKey(_currentAircraftId)){ _tempConfig.Add(_currentAircraftId, new List<string>());  }
+            _tempConfig[_currentAircraftId].Clear();
+            _tempConfig[_currentAircraftId].AddRange(_configuredVariables);
         }
 
         private void btnRemoveAll_Click(object sender, EventArgs e) {
@@ -136,13 +151,18 @@ namespace DCSMATRICFeeder {
                     _availableVariables.Add(variableName);
                 }
             }
+            if (!_tempConfig.ContainsKey(_currentAircraftId)) { _tempConfig.Add(_currentAircraftId, new List<string>()); }
+            _tempConfig[_currentAircraftId].Clear();
+            _tempConfig[_currentAircraftId].AddRange(_configuredVariables);
         }
 
         private void btnRemoveSelected_Click(object sender, EventArgs e) {
             List<string> toRemove = new List<string>();
+
             foreach(string varName in lstConfiguredVariables.SelectedItems) { 
                 toRemove.Add(varName);
             }
+
             foreach (string varName in toRemove) {
                 _configuredVariables.Remove(varName);
             }
@@ -153,6 +173,9 @@ namespace DCSMATRICFeeder {
                     _availableVariables.Add(variableName);
                 }
             }
+            if (!_tempConfig.ContainsKey(_currentAircraftId)) { _tempConfig.Add(_currentAircraftId, new List<string>()); }
+            _tempConfig[_currentAircraftId].Clear();
+            _tempConfig[_currentAircraftId].AddRange(_configuredVariables);
         }
     }
 }
