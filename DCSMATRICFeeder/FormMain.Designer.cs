@@ -185,15 +185,15 @@
             // 
             // btnFilterDialog
             // 
-            btnFilterDialog.Location = new Point(12, 148);
+            btnFilterDialog.Location = new Point(12, 153);
             btnFilterDialog.Name = "btnFilterDialog";
-            btnFilterDialog.Size = new Size(127, 23);
+            btnFilterDialog.Size = new Size(227, 43);
             btnFilterDialog.TabIndex = 19;
-            btnFilterDialog.Text = "Filter variables";
+            btnFilterDialog.Text = "Configure export variables";
             btnFilterDialog.UseVisualStyleBackColor = true;
             btnFilterDialog.Click += btnFilterDialog_Click;
             // 
-            // frmMain
+            // FormMain
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -213,7 +213,7 @@
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
-            Name = "frmMain";
+            Name = "FormMain";
             Text = "DCS-BIOS MATRIC Middleware";
             Load += frmMain_Load;
             ((System.ComponentModel.ISupportInitialize)txtBIOSListenPort).EndInit();

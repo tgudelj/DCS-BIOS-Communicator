@@ -229,7 +229,7 @@ namespace DCSMATRICFeeder {
                 return;
             }
             _ = await LoadDCSBiosConfig(txtDCSBiosInstancePath.Text);
-            FormVariablesFilter frmVars = new FormVariablesFilter();
+            FormVariablesConfiguration frmVars = new FormVariablesConfiguration();
             frmVars.ShowDialog();           
         }
     }
