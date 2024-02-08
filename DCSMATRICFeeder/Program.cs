@@ -12,9 +12,9 @@ namespace DCSMATRICFeeder {
         internal static MiddlewareSettings mwSettings = new MiddlewareSettings();
         [STAThread]
         static void Main() {
-            if (Debugger.IsAttached) {
-                Settings.Default.Reset();
-            }
+            //if (Debugger.IsAttached) {
+            //    Settings.Default.Reset();
+            //}
             loggerFactory = Microsoft.Extensions.Logging.LoggerFactory.Create(builder => {
                 builder
                 .AddConsole()

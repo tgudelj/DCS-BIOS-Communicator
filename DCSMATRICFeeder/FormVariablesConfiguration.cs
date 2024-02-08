@@ -23,26 +23,60 @@ namespace DCSMATRICFeeder {
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Makes a copy of current setting to _tempSettings so we can discard them if we cancel insted of save
+        /// </summary>
+        public void LoadTempSettings() {
+            _tempConfig = new Dictionary<string, List<string>>();
+            foreach (KeyValuePair<string, List<string>> item in Program.mwSettings.AircraftVariables) {
+                _tempConfig.Add(item.Key, new List<string>());
+                foreach(string varName in  item.Value) {
+                    _tempConfig[item.Key].Add(varName);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets all DCS-BIOS variables in specified category for currently selected aircraft
+        /// </summary>
+        /// <param name="categoryName">Category name</param>
+        /// <returns>List of variables</returns>
+        private List<string> GetVariablesForCategory(string categoryName) {
+            if (Program.aircraftBiosConfigurations[_currentAircraftId].ContainsKey(categoryName)) {
+                return Program.aircraftBiosConfigurations[_currentAircraftId][categoryName].Keys.ToList<string>();
+            }
+
+            //Category not found or all items category selected
+            if (categoryName == ALL_ITEMS || string.IsNullOrEmpty(categoryName)) {
+                List<string> result = new List<string>();
+                foreach (string category in Program.aircraftBiosConfigurations[_currentAircraftId].Keys) {
+                    result.AddRange(Program.aircraftBiosConfigurations[_currentAircraftId][category].Keys.ToList<string>());
+                }
+                return result;
+            }
+            
+            //Fall through - return empty list
+            return new List<string>();
+        }
+
         private void FormVariablesFilter_Load(object sender, EventArgs e) {
             _aircraftList = new BindingList<string>(Program.aircraftBiosConfigurations.Keys.ToList<string>());
             ddAircraft.DataSource = _aircraftList;
             ddCategory.DataSource = _categoriesList;
             lstAvailableVariables.DataSource = _availableVariables;
             lstConfiguredVariables.DataSource = _configuredVariables;
-            //Copies current settings
-            _tempConfig = new Dictionary<string, List<string>>();
-            foreach (KeyValuePair<string, List<string>> item in Program.mwSettings.AircraftVariables) {
-                _tempConfig.Add(item.Key, item.Value);
-            }
+            LoadTempSettings();
         }
 
-        //Selected aircraft
+        //Selected aircraft changed
         private void ddAircraft_SelectedIndexChanged(object sender, EventArgs e) {
             if (!Program.aircraftBiosConfigurations.ContainsKey(ddAircraft.SelectedItem.ToString())) {
                 return;
             }
             _currentAircraftId = ddAircraft.SelectedItem.ToString();
 
+            //Categories
+            ddCategory.SelectedIndex = -1;
             _categoriesList.Clear();
             _categoriesList.Add(ALL_ITEMS);
             foreach (string categoryName in Program.aircraftBiosConfigurations[_currentAircraftId].Keys.ToList<string>()) {
@@ -54,11 +88,11 @@ namespace DCSMATRICFeeder {
             if (!_tempConfig.ContainsKey(_currentAircraftId)) {
                 _tempConfig.Add(_currentAircraftId, new List<string>());
             }
-
             foreach (string varName in _tempConfig[_currentAircraftId]) {
                 _configuredVariables.Add(varName);
             }
 
+            //Available DCS-BIOS variables
             _availableVariables.Clear();
             foreach (string variableName in GetVariablesForCategory(ALL_ITEMS)) {
                 if (!_configuredVariables.Contains(variableName)) {
@@ -67,7 +101,7 @@ namespace DCSMATRICFeeder {
             }
         }
 
-        //Selected category
+        //Selected category changed
         private void ddCategory_SelectedIndexChanged(object sender, EventArgs e) {
             if (ddCategory.SelectedIndex == -1) {
                 return;
@@ -78,20 +112,6 @@ namespace DCSMATRICFeeder {
                     _availableVariables.Add(variableName);
                 }
             }
-        }
-
-        private List<string> GetVariablesForCategory(string categoryName) {
-            if (Program.aircraftBiosConfigurations[_currentAircraftId].ContainsKey(categoryName)) {
-                return Program.aircraftBiosConfigurations[_currentAircraftId][categoryName].Keys.ToList<string>();
-            }
-            if (categoryName == ALL_ITEMS || string.IsNullOrEmpty(categoryName)) {
-                List<string> result = new List<string>();
-                foreach (string category in Program.aircraftBiosConfigurations[_currentAircraftId].Keys) {
-                    result.AddRange(Program.aircraftBiosConfigurations[_currentAircraftId][category].Keys.ToList<string>());
-                }
-                return result;
-            }
-            return new List<string>();
         }
 
         private void btnAddSelected_Click(object sender, EventArgs e) {
@@ -186,7 +206,7 @@ namespace DCSMATRICFeeder {
 
         private void txtConfiguredFilter_KeyUp(object sender, KeyEventArgs e) {
             string searchString = txtConfiguredFilter.Text;
-            if (searchString.Length < 2) { 
+            if (searchString.Length < 2) {
                 _configuredVariables.Clear();
                 if (!_tempConfig.ContainsKey(_currentAircraftId)) {
                     _tempConfig.Add(_currentAircraftId, new List<string>());
@@ -231,7 +251,6 @@ namespace DCSMATRICFeeder {
                     Program.mwSettings.AircraftVariables[acName].Add(varName);
                 }
             }
-            Program.mwSettings.AircraftVariables = _tempConfig;
             Properties.Settings.Default.AircraftVariables = JsonConvert.SerializeObject(Program.mwSettings.AircraftVariables);
             Properties.Settings.Default.Save();
             this.Close();
@@ -244,6 +263,6 @@ namespace DCSMATRICFeeder {
         private void lblCategory_Click(object sender, EventArgs e) {
             ddCategory.Focus();
         }
-        
+
     }
 }
