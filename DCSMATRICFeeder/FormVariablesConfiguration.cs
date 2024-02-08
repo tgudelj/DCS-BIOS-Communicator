@@ -48,7 +48,6 @@ namespace DCSMATRICFeeder {
             foreach (string categoryName in Program.aircraftBiosConfigurations[_currentAircraftId].Keys.ToList<string>()) {
                 _categoriesList.Add(categoryName);
             }
-            _availableVariables.Clear();
 
             //Configured variables
             _configuredVariables.Clear();
@@ -58,6 +57,13 @@ namespace DCSMATRICFeeder {
 
             foreach (string varName in _tempConfig[_currentAircraftId]) {
                 _configuredVariables.Add(varName);
+            }
+
+            _availableVariables.Clear();
+            foreach (string variableName in GetVariablesForCategory(ALL_ITEMS)) {
+                if (!_configuredVariables.Contains(variableName)) {
+                    _availableVariables.Add(variableName);
+                }
             }
         }
 
@@ -86,35 +92,6 @@ namespace DCSMATRICFeeder {
                 return result;
             }
             return new List<string>();
-        }
-
-        private void btnCancel_Click(object sender, EventArgs e) {
-            this.Close();
-        }
-
-        private void btnSave_Click(object sender, EventArgs e) {
-            //Copy temporary settings to settings that persist
-            foreach (var acName in _tempConfig.Keys) {
-                if (!Program.mwSettings.AircraftVariables.ContainsKey(acName)) {
-                    Program.mwSettings.AircraftVariables.Add(acName, new List<string>());
-                }
-                Program.mwSettings.AircraftVariables[acName].Clear();
-                foreach (string varName in _tempConfig[acName]) {
-                    Program.mwSettings.AircraftVariables[acName].Add(varName);
-                }
-            }
-            Program.mwSettings.AircraftVariables = _tempConfig;
-            Properties.Settings.Default.AircraftVariables = JsonConvert.SerializeObject(Program.mwSettings.AircraftVariables);
-            Properties.Settings.Default.Save();
-            this.Close();
-        }
-
-        private void lblAircraft_Click(object sender, EventArgs e) {
-            ddAircraft.Focus();
-        }
-
-        private void lblCategory_Click(object sender, EventArgs e) {
-            ddCategory.Focus();
         }
 
         private void btnAddSelected_Click(object sender, EventArgs e) {
@@ -230,7 +207,6 @@ namespace DCSMATRICFeeder {
         private void btnClearConfiguredFilter_Click(object sender, EventArgs e) {
             txtConfiguredFilter.Clear();
             _configuredVariables.Clear();
-            _configuredVariables.Clear();
             if (!_tempConfig.ContainsKey(_currentAircraftId)) {
                 _tempConfig.Add(_currentAircraftId, new List<string>());
             }
@@ -239,5 +215,35 @@ namespace DCSMATRICFeeder {
                 _configuredVariables.Add(varName);
             }
         }
+
+        private void btnCancel_Click(object sender, EventArgs e) {
+            this.Close();
+        }
+
+        private void btnSave_Click(object sender, EventArgs e) {
+            //Copy temporary settings to settings that persist
+            foreach (var acName in _tempConfig.Keys) {
+                if (!Program.mwSettings.AircraftVariables.ContainsKey(acName)) {
+                    Program.mwSettings.AircraftVariables.Add(acName, new List<string>());
+                }
+                Program.mwSettings.AircraftVariables[acName].Clear();
+                foreach (string varName in _tempConfig[acName]) {
+                    Program.mwSettings.AircraftVariables[acName].Add(varName);
+                }
+            }
+            Program.mwSettings.AircraftVariables = _tempConfig;
+            Properties.Settings.Default.AircraftVariables = JsonConvert.SerializeObject(Program.mwSettings.AircraftVariables);
+            Properties.Settings.Default.Save();
+            this.Close();
+        }
+
+        private void lblAircraft_Click(object sender, EventArgs e) {
+            ddAircraft.Focus();
+        }
+
+        private void lblCategory_Click(object sender, EventArgs e) {
+            ddCategory.Focus();
+        }
+        
     }
 }
