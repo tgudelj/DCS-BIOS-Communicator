@@ -9,8 +9,7 @@ DCS BIOS Middleware is based on excellent work done by [charliefoxtwo](https://g
 
 
 
-<img src="https://github.com/tgudelj/DCS-BIOS-MATRIC-Middleware/assets/1483482/e91c08b9-622d-4653-b05b-0a1770ad8210" width="480" /><br/>
-
+<img src="https://github.com/tgudelj/DCS-BIOS-MATRIC-Middleware/assets/1483482/e91c08b9-622d-4653-b05b-0a1770ad8210" width="480" />
 <img src="https://github.com/tgudelj/DCS-BIOS-MATRIC-Middleware/assets/1483482/34fd3a8c-b5c5-4b87-9751-2420596d3665" width="480" />
 
 
