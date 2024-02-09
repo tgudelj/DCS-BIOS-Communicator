@@ -1,52 +1,22 @@
 
-# DCS BIOS MATRIC Middleware
+# <img src="https://github.com/tgudelj/DCS-BIOS-MATRIC-Middleware/assets/1483482/280d3acd-7cd9-4e77-9a0c-a2b79d28fb2b" height="60" /> DCS BIOS MATRIC Middleware
 
-DCS BIOS MATRIC Middleware is a program which provides integration between DCS World flight simulator and MATRIC utilizing DCS-BIOS to read data from DCS in real time and push it to MATRIC as variables.
+DCS BIOS MATRIC Middleware is a program which provides integration between [DCS World flight simulator](**https://www.digitalcombatsimulator.com/) and [MATRIC](https://matricapp.com) utilizing DCS-BIOS to read data from DCS in real time and push it to MATRIC as variables.
 This enables MATRIC users to bind control states to actual flightsim state (e.g. indicators, displays etc.). 
 DCS BIOS Middleware is based on excellent work done by [charliefoxtwo](https://github.com/charliefoxtwo) DCS-BIOS-Communicator library https://github.com/charliefoxtwo/DCS-BIOS-Communicator.
 
 
 
-<img src="https://raw.githubusercontent.com/charliefoxtwo/DCS-BIOS-Communicator/main/DcsBiosCommunicator/resources/airplane.png" alt="DCS BIOS Communicator logo - a vector outline of an airplane" width="150" />
+<img src="https://github.com/tgudelj/DCS-BIOS-MATRIC-Middleware/assets/1483482/e91c08b9-622d-4653-b05b-0a1770ad8210" width="480" /><br/>
+
+<img src="https://github.com/tgudelj/DCS-BIOS-MATRIC-Middleware/assets/1483482/34fd3a8c-b5c5-4b87-9751-2420596d3665" width="480" />
+
 
 ## Features
 
 - Parses data from DCS-BIOS
-- Handles pesky UTF-8 symbols
-- Might buy you an ice cream sandwich if you're lucky
-- Cross platform
-
-
-## Usage/Examples
-
-```c#
-// create a new UDP client for talking to DCS-BIOS
-var client = new BiosUdpClient(IPAddress.Parse("239.255.50.10"), 7778, 5010, logger);
-client.OpenConnection();
-
-// create your own translator class which implements IBiosTranslator
-var biosListener = new BiosListener(client, translator, logger);
-
-// register the json configuration files
-var configLocation = "%userprofile%/Saved Games/DCS.openbeta/Scripts/DCS-BIOS/doc/json/";
-foreach (var config in await AircraftBiosConfiguration.AllConfigurations(configLocation))
-{
-    biosListener.RegisterConfiguration(config);
-}
-
-// start the listener
-biosListener.Start();
-
-```
-
-
-## Roadmap
-
-- Unit tests
-
+- Easy setup, just unzip to folder
 
 ## Acknowledgements
 
-- [Package icon](https://www.flaticon.com/authors/good-ware)
-- [readme tools](https://readme.so)
-- [badges](https://shields.io)
+- [DCS-BIOS-Communicator library by charliefoxtwo](https://www.flaticon.com/authors/good-ware](https://github.com/charliefoxtwo/DCS-BIOS-Communicator
