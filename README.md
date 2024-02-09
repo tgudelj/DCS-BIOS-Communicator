@@ -1,5 +1,7 @@
 
-# <img src="https://github.com/tgudelj/DCS-BIOS-MATRIC-Middleware/assets/1483482/280d3acd-7cd9-4e77-9a0c-a2b79d28fb2b" height="60" /> DCS BIOS MATRIC Middleware
+# DCS BIOS MATRIC Middleware
+<img src="https://github.com/tgudelj/DCS-BIOS-MATRIC-Middleware/assets/1483482/d1162be3-0e6f-4650-a567-0def8886123d" />
+
 
 DCS BIOS MATRIC Middleware is a program which provides integration between [DCS World flight simulator](**https://www.digitalcombatsimulator.com/) and [MATRIC](https://matricapp.com) utilizing DCS-BIOS to read data from DCS in real time and push it to MATRIC as variables.
 This enables MATRIC users to bind control states to actual flightsim state (e.g. indicators, displays etc.). 
