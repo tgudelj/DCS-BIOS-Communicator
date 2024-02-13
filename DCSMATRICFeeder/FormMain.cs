@@ -25,6 +25,8 @@ namespace DCSMATRICFeeder {
         }
 
         private void Translator_UpdateBufferSizeNotification(object? sender, MatricDCSTranslator.TxRxNotificationEventArgs e) {
+            //Update only if form is visible and not minimized
+            if(!this.Visible || WindowState == FormWindowState.Minimized) { return; }
             if (pbBuffer.InvokeRequired) {
                 pbBuffer.Invoke(new Action(() => pbBuffer.Value = e.Count));
             } else {
@@ -33,6 +35,8 @@ namespace DCSMATRICFeeder {
         }
 
         private void Translator_UpdateSentNotification(object? sender, MatricDCSTranslator.TxRxNotificationEventArgs e) {
+            //Update only if form is visible and not minimised
+            if (!this.Visible || WindowState == FormWindowState.Minimized) { return; }
             if (pbSentVars.InvokeRequired) {
                 pbSentVars.Invoke(new Action(() => pbSentVars.Value = e.Count));
             } else {
