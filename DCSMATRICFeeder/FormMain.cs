@@ -27,8 +27,7 @@ namespace DCSMATRICFeeder {
         private void Translator_UpdateBufferSizeNotification(object? sender, MatricDCSTranslator.TxRxNotificationEventArgs e) {
             if (pbBuffer.InvokeRequired) {
                 pbBuffer.Invoke(new Action(() => pbBuffer.Value = e.Count));
-            }
-            else {
+            } else {
                 pbBuffer.Value = e.Count;
             }
         }
@@ -36,8 +35,7 @@ namespace DCSMATRICFeeder {
         private void Translator_UpdateSentNotification(object? sender, MatricDCSTranslator.TxRxNotificationEventArgs e) {
             if (pbSentVars.InvokeRequired) {
                 pbSentVars.Invoke(new Action(() => pbSentVars.Value = e.Count));
-            }
-            else {
+            } else {
                 pbSentVars.Value = e.Count;
             }
         }
@@ -51,8 +49,7 @@ namespace DCSMATRICFeeder {
             }
             if (Directory.Exists(Program.mwSettings.DCSBIOSJsonPath)) {
                 txtDCSBiosInstancePath.Text = Program.mwSettings.DCSBIOSJsonPath;
-            }
-            else {
+            } else {
                 if (biosPaths.Count > 0) {
                     txtDCSBiosInstancePath.Text = biosPaths.FirstOrDefault();
                 }
@@ -102,12 +99,10 @@ namespace DCSMATRICFeeder {
                     JsonObject matricConf = (JsonObject)JsonObject.Parse(File.ReadAllText(matricConfigPath));
                     port = matricConf["NET_IntegrationAPIUDPPort"].GetValue<int>();
                     enabled = matricConf["EnableIntegrationAPI"].GetValue<bool>();
-                }
-                else {
+                } else {
                     throw new Exception($@"MATRIC configuration file not found at ""{matricConfigPath}""");
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Program.logger.LogError($"Couldn't read MATRIC configuration {e.Message}");
             }
             return (enabled, port);
@@ -117,7 +112,9 @@ namespace DCSMATRICFeeder {
             Program.mwSettings = new MiddlewareSettings() {
                 ListenAddress = Properties.Settings.Default.ListenAddress,
                 ListenPort = Properties.Settings.Default.ListenPort,
-                DCSBIOSJsonPath = Properties.Settings.Default.DCSBIOSJsonPath
+                DCSBIOSJsonPath = Properties.Settings.Default.DCSBIOSJsonPath,
+                UpdateFrequency = Properties.Settings.Default.UpdateFrequency
+
             };
             if (string.IsNullOrEmpty(Properties.Settings.Default.AircraftVariables)) {
                 Program.mwSettings.AircraftVariables = new Dictionary<string, List<string>>();
@@ -132,6 +129,8 @@ namespace DCSMATRICFeeder {
             txtBIOSListenPort.Value = Program.mwSettings.ListenPort;
             txtListenIp.Text = Program.mwSettings.ListenAddress;
             txtDCSBiosInstancePath.Text = Program.mwSettings.DCSBIOSJsonPath;
+            tbUpdateFrequency.Value = Program.mwSettings.UpdateFrequency;
+            lblUpdateFrequency.Text = Program.mwSettings.UpdateFrequency.ToString();
         }
 
         private void SaveSettings() {
@@ -139,6 +138,7 @@ namespace DCSMATRICFeeder {
             Properties.Settings.Default.ListenPort = Program.mwSettings.ListenPort;
             Properties.Settings.Default.DCSBIOSJsonPath = Program.mwSettings.DCSBIOSJsonPath;
             Properties.Settings.Default.AircraftVariables = JsonConvert.SerializeObject(Program.mwSettings.AircraftVariables);
+            Properties.Settings.Default.UpdateFrequency = Program.mwSettings.UpdateFrequency;
             Properties.Settings.Default.Save();
         }
 
@@ -154,6 +154,10 @@ namespace DCSMATRICFeeder {
             txtDCSBiosInstancePath.Focus();
         }
 
+        private void lblUpdatesLabel_Click(object sender, EventArgs e) {
+            tbUpdateFrequency.Focus();
+        }
+
         private void btnStartStop_Click(object sender, EventArgs e) {
             ToggleProcessing();
         }
@@ -165,7 +169,7 @@ namespace DCSMATRICFeeder {
         private async Task<AircraftBiosConfiguration[]> LoadDCSBiosConfig(string path) {
             AircraftBiosConfiguration[] configurations = await AircraftBiosConfiguration.AllConfigurations("AircraftAliases.json", null, path);
             Program.aircraftBiosConfigurations.Clear();
-            foreach (var config in configurations) { 
+            foreach (var config in configurations) {
                 Program.aircraftBiosConfigurations.Add(config.AircraftName, config);
             }
             return configurations;
@@ -210,7 +214,7 @@ namespace DCSMATRICFeeder {
 
             biosListener = new BiosListener(biosClient, translator, Program.loggerFactory.CreateLogger<BiosListener>());
             AircraftBiosConfiguration[] aircraftConfigs = await LoadDCSBiosConfig(Program.mwSettings.DCSBIOSJsonPath);
-            foreach (AircraftBiosConfiguration config in aircraftConfigs) {                
+            foreach (AircraftBiosConfiguration config in aircraftConfigs) {
                 biosListener.RegisterConfiguration(config);
             }
 
@@ -230,7 +234,14 @@ namespace DCSMATRICFeeder {
             }
             _ = await LoadDCSBiosConfig(txtDCSBiosInstancePath.Text);
             FormVariablesConfiguration frmVars = new FormVariablesConfiguration();
-            frmVars.ShowDialog();           
+            frmVars.ShowDialog();
         }
+
+        private void tbUpdateFrequency_Scroll(object sender, EventArgs e) {
+            Program.mwSettings.UpdateFrequency = tbUpdateFrequency.Value;
+            lblUpdateFrequency.Text = tbUpdateFrequency.Value.ToString();
+        }
+
+
     }
 }

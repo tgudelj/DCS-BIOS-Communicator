@@ -1,4 +1,6 @@
-﻿namespace DCSMATRICFeeder {
+﻿using System.ComponentModel;
+
+namespace DCSMATRICFeeder {
     /// <summary>
     /// Represents DCS-BIOS MATRIC middleware configuration
     /// </summary>
@@ -8,6 +10,7 @@
             ListenPort = 5010;
             DCSBIOSJsonPath = "";
             AircraftVariables = new Dictionary<string, List<string>>();
+            UpdateFrequency = 10;
         }
 
         /// <summary>
@@ -31,5 +34,10 @@
         /// value - list of variables to forward to MATRIC
         /// </summary>
         public Dictionary<string, List<string>> AircraftVariables { get; set; }
+
+        /// <summary>
+        /// Desired updates per second
+        /// </summary>
+        public int UpdateFrequency { get; set; }
     }
 }

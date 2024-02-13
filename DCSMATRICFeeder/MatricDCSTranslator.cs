@@ -30,7 +30,11 @@ namespace DCSMATRICFeeder {
             _logger = logger;
             _dcsValues = new Dictionary<string, object>();
             _changesBuffer = new Dictionary<string, ServerVariable>();
-            _timer = new System.Threading.Timer(SendUpdates, null, 100, 200);            
+            _timer = new System.Threading.Timer(SendUpdates,
+                                                null,
+                                                100,
+                                                (int)Math.Round(1000d / Program.mwSettings.UpdateFrequency)
+                                                );            
             matricComm = new Matric.Integration.Matric("DCS", null, matricIntegrationPort);
             matricComm.OnVariablesChanged += MatricComm_OnVariablesChanged;
         }

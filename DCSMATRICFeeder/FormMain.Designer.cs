@@ -39,7 +39,7 @@
             label2 = new Label();
             groupBox1 = new GroupBox();
             btnFilterDialog = new Button();
-            label3 = new Label();
+            lblUpdatesLabel = new Label();
             tbUpdateFrequency = new TrackBar();
             lblUpdateFrequency = new Label();
             ((System.ComponentModel.ISupportInitialize)txtBIOSListenPort).BeginInit();
@@ -92,10 +92,10 @@
             // btnStartStop
             // 
             btnStartStop.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
-            btnStartStop.Location = new Point(436, 202);
+            btnStartStop.Location = new Point(436, 216);
             btnStartStop.Name = "btnStartStop";
             btnStartStop.Size = new Size(227, 43);
-            btnStartStop.TabIndex = 5;
+            btnStartStop.TabIndex = 7;
             btnStartStop.Text = "START";
             btnStartStop.UseVisualStyleBackColor = true;
             btnStartStop.Click += btnStartStop_Click;
@@ -189,43 +189,47 @@
             // 
             // btnFilterDialog
             // 
-            btnFilterDialog.Location = new Point(12, 203);
+            btnFilterDialog.Location = new Point(12, 217);
             btnFilterDialog.Name = "btnFilterDialog";
             btnFilterDialog.Size = new Size(227, 43);
-            btnFilterDialog.TabIndex = 19;
+            btnFilterDialog.TabIndex = 6;
             btnFilterDialog.Text = "Configure export variables";
             btnFilterDialog.UseVisualStyleBackColor = true;
             btnFilterDialog.Click += btnFilterDialog_Click;
             // 
-            // label3
+            // lblUpdatesLabel
             // 
-            label3.FlatStyle = FlatStyle.Flat;
-            label3.Font = new Font("Segoe UI", 10F);
-            label3.Location = new Point(12, 156);
-            label3.Name = "label3";
-            label3.Size = new Size(371, 29);
-            label3.TabIndex = 20;
-            label3.Text = "Update frequency [updates/second]";
+            lblUpdatesLabel.FlatStyle = FlatStyle.Flat;
+            lblUpdatesLabel.Font = new Font("Segoe UI", 10F);
+            lblUpdatesLabel.Location = new Point(12, 156);
+            lblUpdatesLabel.Name = "lblUpdatesLabel";
+            lblUpdatesLabel.Size = new Size(371, 29);
+            lblUpdatesLabel.TabIndex = 20;
+            lblUpdatesLabel.Text = "Update frequency [updates/second]";
+            lblUpdatesLabel.Click += lblUpdatesLabel_Click;
             // 
             // tbUpdateFrequency
             // 
-            tbUpdateFrequency.Location = new Point(436, 158);
+            tbUpdateFrequency.Location = new Point(471, 148);
+            tbUpdateFrequency.Maximum = 25;
             tbUpdateFrequency.Minimum = 1;
             tbUpdateFrequency.Name = "tbUpdateFrequency";
-            tbUpdateFrequency.Size = new Size(227, 45);
-            tbUpdateFrequency.SmallChange = 20;
-            tbUpdateFrequency.TabIndex = 21;
-            tbUpdateFrequency.TickStyle = TickStyle.None;
+            tbUpdateFrequency.Size = new Size(192, 45);
+            tbUpdateFrequency.TabIndex = 5;
+            tbUpdateFrequency.TickStyle = TickStyle.Both;
             tbUpdateFrequency.Value = 1;
+            tbUpdateFrequency.Scroll += tbUpdateFrequency_Scroll;
             // 
             // lblUpdateFrequency
             // 
             lblUpdateFrequency.FlatStyle = FlatStyle.Flat;
-            lblUpdateFrequency.Font = new Font("Segoe UI", 10F);
-            lblUpdateFrequency.Location = new Point(389, 156);
+            lblUpdateFrequency.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            lblUpdateFrequency.Location = new Point(436, 150);
             lblUpdateFrequency.Name = "lblUpdateFrequency";
-            lblUpdateFrequency.Size = new Size(41, 29);
+            lblUpdateFrequency.Size = new Size(29, 41);
             lblUpdateFrequency.TabIndex = 22;
+            lblUpdateFrequency.Text = "00";
+            lblUpdateFrequency.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // FormMain
             // 
@@ -234,7 +238,7 @@
             ClientSize = new Size(675, 378);
             Controls.Add(lblUpdateFrequency);
             Controls.Add(tbUpdateFrequency);
-            Controls.Add(label3);
+            Controls.Add(lblUpdatesLabel);
             Controls.Add(btnFilterDialog);
             Controls.Add(pbBuffer);
             Controls.Add(pbSentVars);
@@ -278,7 +282,7 @@
         private Label label2;
         private GroupBox groupBox1;
         private Button btnFilterDialog;
-        private Label label3;
+        private Label lblUpdatesLabel;
         private TrackBar tbUpdateFrequency;
         private Label lblUpdateFrequency;
     }
