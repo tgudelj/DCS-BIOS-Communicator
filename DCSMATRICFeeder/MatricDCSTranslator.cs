@@ -37,7 +37,19 @@ namespace DCSMATRICFeeder {
                                                 );            
             matricComm = new Matric.Integration.Matric("DCS", null, matricIntegrationPort);
             matricComm.OnVariablesChanged += MatricComm_OnVariablesChanged;
+            matricComm.OnControlInteraction += MatricComm_OnControlInteraction;
+            //create DCS_INPUT_COMMAND as user editable variable
+            ServerVariable dcsInputVariable = new ServerVariable() {
+                Name = "DCS_INPUT_COMMAND",
+                Value = "",
+                VariableType = ServerVariable.ServerVariableType.STRING,
+                IsPersistent = true,
+                IsUserEditable = true
+            };
+            _changesBuffer.Add(dcsInputVariable.Name, dcsInputVariable);
         }
+
+
 
         public event EventHandler<TxRxNotificationEventArgs> UpdateSentNotification;
 
@@ -45,6 +57,12 @@ namespace DCSMATRICFeeder {
 
         private void MatricComm_OnVariablesChanged(object sender, ServerVariablesChangedEventArgs data) {
             //throw new NotImplementedException();
+            Debug.WriteLine("Got variables changed event notification");
+        }
+
+        private void MatricComm_OnControlInteraction(object sender, object data) {
+            //throw new NotImplementedException();
+            Debug.WriteLine("Got control interaction event notification " + data.ToString() );
         }
 
         public void FromBios<T>(string biosCode, T data) {
