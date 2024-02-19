@@ -18,15 +18,17 @@ namespace DCSMATRICFeeder {
         const string COMMON_DATA = "CommonData";
         const string METADATA_START = "MetadataStart";
         const string METADATA_END = "MetadataEnd";
+        const string DCS_INPUT_COMMAND = "DCS_INPUT_COMMAND";
         string _currentAircraftName = string.Empty;
         List<string> _allowedVariables = new List<string>();
         Matric.Integration.Matric matricComm;
         Dictionary<string, object> _dcsValues;
         Dictionary<string, ServerVariable> _changesBuffer;
         System.Threading.Timer _timer;
+        BiosUdpClient biosClient = null;
         ILogger _logger;
         private object locker = new object();
-        public MatricDCSTranslator(int matricIntegrationPort, ILogger logger) {
+        public MatricDCSTranslator(int matricIntegrationPort, BiosUdpClient biosClient, ILogger logger) {
             _logger = logger;
             _dcsValues = new Dictionary<string, object>();
             _changesBuffer = new Dictionary<string, ServerVariable>();
@@ -40,7 +42,7 @@ namespace DCSMATRICFeeder {
             matricComm.OnControlInteraction += MatricComm_OnControlInteraction;
             //create DCS_INPUT_COMMAND as user editable variable
             ServerVariable dcsInputVariable = new ServerVariable() {
-                Name = "DCS_INPUT_COMMAND",
+                Name = DCS_INPUT_COMMAND,
                 Value = "",
                 VariableType = ServerVariable.ServerVariableType.STRING,
                 IsPersistent = true,
@@ -58,6 +60,10 @@ namespace DCSMATRICFeeder {
         private void MatricComm_OnVariablesChanged(object sender, ServerVariablesChangedEventArgs data) {
             //throw new NotImplementedException();
             Debug.WriteLine("Got variables changed event notification");
+            if (data.ChangedVariables.Contains(DCS_INPUT_COMMAND)) { 
+                string command = data.Variables[DCS_INPUT_COMMAND].Value.ToString();
+                biosClient?.Send(command, string.Empty); //method takes separate biosAddress and data, but in the end it is concatenated and sent via UDP anyway
+            }
         }
 
         private void MatricComm_OnControlInteraction(object sender, object data) {

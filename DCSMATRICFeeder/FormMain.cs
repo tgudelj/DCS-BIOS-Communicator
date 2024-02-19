@@ -135,11 +135,13 @@ namespace DCSMATRICFeeder {
             txtDCSBiosInstancePath.Text = Program.mwSettings.DCSBIOSJsonPath;
             tbUpdateFrequency.Value = Program.mwSettings.UpdateFrequency;
             lblUpdateFrequency.Text = Program.mwSettings.UpdateFrequency.ToString();
+            txtBIOSListenPort.Value = Program.mwSettings.ImportPort;
         }
 
         private void SaveSettings() {
             Properties.Settings.Default.ListenAddress = Program.mwSettings.ListenAddress;
             Properties.Settings.Default.ListenPort = Program.mwSettings.ListenPort;
+            Properties.Settings.Default.DCSBIOSImportPort = Program.mwSettings.ImportPort;
             Properties.Settings.Default.DCSBIOSJsonPath = Program.mwSettings.DCSBIOSJsonPath;
             Properties.Settings.Default.AircraftVariables = JsonConvert.SerializeObject(Program.mwSettings.AircraftVariables);
             Properties.Settings.Default.UpdateFrequency = Program.mwSettings.UpdateFrequency;
@@ -199,8 +201,8 @@ namespace DCSMATRICFeeder {
                 return;
             }
             Program.mwSettings.DCSBIOSJsonPath = txtDCSBiosInstancePath.Text;
-            Program.mwSettings.ListenPort = (int)txtBIOSListenPort.Value;
-
+            Program.mwSettings.ListenPort = (int) txtBIOSListenPort.Value;
+            Program.mwSettings.ImportPort = (int) txtDCSBIOSImportPort.Value;
 
             (bool matricIntegrationEnabled, int matricIntegrationPort) = GetMatricConfig();
 
@@ -210,9 +212,9 @@ namespace DCSMATRICFeeder {
             }
 
             // create a new UDP client for talking to DCS-BIOS
-            biosClient = new BiosUdpClient(IPAddress.Parse(Program.mwSettings.ListenAddress), 7778, Program.mwSettings.ListenPort, Program.loggerFactory.CreateLogger<BiosUdpClient>());
+            biosClient = new BiosUdpClient(IPAddress.Parse(Program.mwSettings.ListenAddress), Program.mwSettings.ImportPort, Program.mwSettings.ListenPort, Program.loggerFactory.CreateLogger<BiosUdpClient>());
             biosClient.OpenConnection();
-            translator = new MatricDCSTranslator(matricIntegrationPort, Program.logger);
+            translator = new MatricDCSTranslator(matricIntegrationPort, biosClient, Program.logger);
             translator.UpdateSentNotification += Translator_UpdateSentNotification;
             translator.UpdateBufferSizeNotification += Translator_UpdateBufferSizeNotification;
 

@@ -8,6 +8,7 @@ namespace DCSMATRICFeeder {
         public MiddlewareSettings() {
             ListenAddress = "239.255.50.10";
             ListenPort = 5010;
+            ImportPort = 7778;
             DCSBIOSJsonPath = "";
             AircraftVariables = new Dictionary<string, List<string>>();
             UpdateFrequency = 10;
@@ -19,9 +20,14 @@ namespace DCSMATRICFeeder {
         public string ListenAddress {  get; set; }
 
         /// <summary>
-        /// Port to listen on for DCS-BIOS, default is 5010
+        /// Port to listen on for DCS-BIOS, default 5010
         /// </summary>
         public int ListenPort { get; set; }
+
+        /// <summary>
+        /// Port for DCS-BIOS import messages, default 7778
+        /// </summary>
+        public int ImportPort { get; set; }
 
         /// <summary>
         /// Path to DCS-BIOS doc/json directory, default is "%userprofile%/Saved Games/DCS.openbeta/Scripts/DCS-BIOS/doc/json/"

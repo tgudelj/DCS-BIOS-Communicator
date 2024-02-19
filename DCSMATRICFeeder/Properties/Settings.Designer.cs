@@ -82,5 +82,17 @@ namespace DCSMATRICFeeder.Properties {
                 this["UpdateFrequency"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("7778")]
+        public int DCSBIOSImportPort {
+            get {
+                return ((int)(this["DCSBIOSImportPort"]));
+            }
+            set {
+                this["DCSBIOSImportPort"] = value;
+            }
+        }
     }
 }

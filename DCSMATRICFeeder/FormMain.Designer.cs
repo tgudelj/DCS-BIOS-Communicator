@@ -42,9 +42,12 @@
             lblUpdatesLabel = new Label();
             tbUpdateFrequency = new TrackBar();
             lblUpdateFrequency = new Label();
+            lblDCSBIOSImport = new Label();
+            txtDCSBIOSImportPort = new NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)txtBIOSListenPort).BeginInit();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)tbUpdateFrequency).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)txtDCSBIOSImportPort).BeginInit();
             SuspendLayout();
             // 
             // txtBIOSListenPort
@@ -86,13 +89,13 @@
             lblBiosListenPort.Name = "lblBiosListenPort";
             lblBiosListenPort.Size = new Size(418, 29);
             lblBiosListenPort.TabIndex = 4;
-            lblBiosListenPort.Text = "DCS-BOIS listener port (default 5010)";
+            lblBiosListenPort.Text = "DCS-BIOS listener port (default 5010)";
             lblBiosListenPort.Click += lblBiosListenPort_Click;
             // 
             // btnStartStop
             // 
             btnStartStop.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
-            btnStartStop.Location = new Point(436, 216);
+            btnStartStop.Location = new Point(436, 252);
             btnStartStop.Name = "btnStartStop";
             btnStartStop.Size = new Size(227, 43);
             btnStartStop.TabIndex = 7;
@@ -133,7 +136,7 @@
             // 
             pbSentVars.BackColor = Color.FromArgb(66, 66, 66);
             pbSentVars.ForeColor = Color.FromArgb(244, 157, 15);
-            pbSentVars.Location = new Point(74, 333);
+            pbSentVars.Location = new Point(74, 369);
             pbSentVars.Maximum = 200;
             pbSentVars.Name = "pbSentVars";
             pbSentVars.Size = new Size(583, 23);
@@ -145,7 +148,7 @@
             // 
             pbBuffer.BackColor = Color.FromArgb(66, 66, 66);
             pbBuffer.ForeColor = Color.FromArgb(244, 157, 15);
-            pbBuffer.Location = new Point(74, 304);
+            pbBuffer.Location = new Point(74, 340);
             pbBuffer.Maximum = 200;
             pbBuffer.Name = "pbBuffer";
             pbBuffer.Size = new Size(583, 23);
@@ -180,7 +183,7 @@
             groupBox1.Controls.Add(label2);
             groupBox1.Controls.Add(label1);
             groupBox1.Font = new Font("Segoe UI", 10F);
-            groupBox1.Location = new Point(12, 272);
+            groupBox1.Location = new Point(12, 308);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(651, 101);
             groupBox1.TabIndex = 18;
@@ -189,7 +192,7 @@
             // 
             // btnFilterDialog
             // 
-            btnFilterDialog.Location = new Point(12, 217);
+            btnFilterDialog.Location = new Point(12, 253);
             btnFilterDialog.Name = "btnFilterDialog";
             btnFilterDialog.Size = new Size(227, 43);
             btnFilterDialog.TabIndex = 6;
@@ -231,11 +234,33 @@
             lblUpdateFrequency.Text = "00";
             lblUpdateFrequency.TextAlign = ContentAlignment.MiddleCenter;
             // 
+            // lblDCSBIOSImport
+            // 
+            lblDCSBIOSImport.FlatStyle = FlatStyle.Flat;
+            lblDCSBIOSImport.Font = new Font("Segoe UI", 10F);
+            lblDCSBIOSImport.Location = new Point(12, 192);
+            lblDCSBIOSImport.Name = "lblDCSBIOSImport";
+            lblDCSBIOSImport.Size = new Size(418, 29);
+            lblDCSBIOSImport.TabIndex = 23;
+            lblDCSBIOSImport.Text = "DCS-BIOS Import port (default 7778)";
+            // 
+            // txtDCSBIOSImportPort
+            // 
+            txtDCSBIOSImportPort.Font = new Font("Segoe UI", 11F);
+            txtDCSBIOSImportPort.Location = new Point(436, 193);
+            txtDCSBIOSImportPort.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
+            txtDCSBIOSImportPort.Name = "txtDCSBIOSImportPort";
+            txtDCSBIOSImportPort.Size = new Size(227, 27);
+            txtDCSBIOSImportPort.TabIndex = 24;
+            txtDCSBIOSImportPort.Value = new decimal(new int[] { 7778, 0, 0, 0 });
+            // 
             // FormMain
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(675, 378);
+            ClientSize = new Size(675, 413);
+            Controls.Add(lblDCSBIOSImport);
+            Controls.Add(txtDCSBIOSImportPort);
             Controls.Add(lblUpdateFrequency);
             Controls.Add(tbUpdateFrequency);
             Controls.Add(lblUpdatesLabel);
@@ -261,6 +286,7 @@
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)tbUpdateFrequency).EndInit();
+            ((System.ComponentModel.ISupportInitialize)txtDCSBIOSImportPort).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -285,5 +311,7 @@
         private Label lblUpdatesLabel;
         private TrackBar tbUpdateFrequency;
         private Label lblUpdateFrequency;
+        private Label lblDCSBIOSImport;
+        private NumericUpDown txtDCSBIOSImportPort;
     }
 }

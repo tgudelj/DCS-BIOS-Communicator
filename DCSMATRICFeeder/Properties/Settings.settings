@@ -17,5 +17,8 @@
     <Setting Name="UpdateFrequency" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">10</Value>
     </Setting>
+    <Setting Name="DCSBIOSImportPort" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">7778</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
