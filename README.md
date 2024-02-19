@@ -15,7 +15,8 @@ DCS BIOS Middleware is based on excellent work done by [charliefoxtwo](https://g
 
 ## Features
 
-- Parses data from DCS-BIOS
+- Parses data from DCS-BIOS and exports it to MATRIC variables
+- Reads a "well known" variable called DCS_INPUT_COMMAND from MATRIC and sends it to DCS-BIOS input interface
 - Easy setup, just unzip to folder
 
 ## Acknowledgements
