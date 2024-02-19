@@ -25,11 +25,12 @@ namespace DCSMATRICFeeder {
         Dictionary<string, object> _dcsValues;
         Dictionary<string, ServerVariable> _changesBuffer;
         System.Threading.Timer _timer;
-        BiosUdpClient biosClient = null;
+        BiosUdpClient _biosClient = null;
         ILogger _logger;
         private object locker = new object();
         public MatricDCSTranslator(int matricIntegrationPort, BiosUdpClient biosClient, ILogger logger) {
             _logger = logger;
+            _biosClient = biosClient;
             _dcsValues = new Dictionary<string, object>();
             _changesBuffer = new Dictionary<string, ServerVariable>();
             _timer = new System.Threading.Timer(SendUpdates,
@@ -58,17 +59,33 @@ namespace DCSMATRICFeeder {
         public event EventHandler<TxRxNotificationEventArgs> UpdateBufferSizeNotification;
 
         private void MatricComm_OnVariablesChanged(object sender, ServerVariablesChangedEventArgs data) {
-            //throw new NotImplementedException();
-            Debug.WriteLine("Got variables changed event notification");
-            if (data.ChangedVariables.Contains(DCS_INPUT_COMMAND)) { 
+            //Debug.WriteLine("Got variables changed event notification");
+            if (data.ChangedVariables.Contains(DCS_INPUT_COMMAND)) {
+                if (data.Variables[DCS_INPUT_COMMAND].Value == null) {
+                    return;
+                }
+                if (string.IsNullOrEmpty(data.Variables[DCS_INPUT_COMMAND].Value as string)) {
+                    return;
+                }
                 string command = data.Variables[DCS_INPUT_COMMAND].Value.ToString();
-                biosClient?.Send(command, string.Empty); //method takes separate biosAddress and data, but in the end it is concatenated and sent via UDP anyway
+#if DEBUG
+                Debug.WriteLine($"DCS-BIOS import command: {command}");
+#endif
+                _biosClient?.Send(command, ""); //method takes separate biosAddress and data, but in the end it is concatenated and sent via UDP anyway
+                //Reset the variable immediatelly
+                matricComm.SetVariables(new List<ServerVariable>() { new ServerVariable() {
+                    Name = DCS_INPUT_COMMAND,
+                    Value = "",
+                    VariableType = ServerVariable.ServerVariableType.STRING,
+                    IsPersistent = true,
+                    IsUserEditable = true
+                    }
+                });
             }
         }
 
         private void MatricComm_OnControlInteraction(object sender, object data) {
             //throw new NotImplementedException();
-            Debug.WriteLine("Got control interaction event notification " + data.ToString() );
         }
 
         public void FromBios<T>(string biosCode, T data) {
@@ -77,6 +94,9 @@ namespace DCSMATRICFeeder {
                 if (!data.ToString().Equals(_currentAircraftName)) { 
                     //New aircraft, load config for aircraft
                     _currentAircraftName = data.ToString();
+#if DEBUG
+                    Debug.WriteLine($"DCS-BIOS module detected {_currentAircraftName}");
+#endif
                     if (Program.mwSettings.AircraftVariables.ContainsKey(_currentAircraftName)) {
                         _allowedVariables.Clear();
                         _allowedVariables = Program.mwSettings.AircraftVariables[_currentAircraftName];
@@ -92,6 +112,10 @@ namespace DCSMATRICFeeder {
                         }
                     }
                 }
+            }
+            if(string.IsNullOrEmpty(_currentAircraftName)) {
+                //Do not export anything until we know the module and can load variables configuration for that module
+                return;
             }
 
             if(_allowedVariables.Count > 0) {
@@ -140,7 +164,7 @@ namespace DCSMATRICFeeder {
         }
 
         public void SendUpdates(object state) {
-            Debug.WriteLine($"Changes: {_changesBuffer.Keys.Count}");
+            //Debug.WriteLine($"Changes: {_changesBuffer.Keys.Count}");
             int bufferSize = _changesBuffer.Count;
             Task.Run(() => {
                 UpdateBufferSizeNotification?.Invoke(this, new TxRxNotificationEventArgs(Math.Min(bufferSize, 200)));

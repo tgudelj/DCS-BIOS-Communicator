@@ -135,7 +135,7 @@ namespace DCSMATRICFeeder {
             txtDCSBiosInstancePath.Text = Program.mwSettings.DCSBIOSJsonPath;
             tbUpdateFrequency.Value = Program.mwSettings.UpdateFrequency;
             lblUpdateFrequency.Text = Program.mwSettings.UpdateFrequency.ToString();
-            txtBIOSListenPort.Value = Program.mwSettings.ImportPort;
+            txtDCSBIOSImportPort.Value = Program.mwSettings.ImportPort;
         }
 
         private void SaveSettings() {
