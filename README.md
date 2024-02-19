@@ -21,4 +21,4 @@ DCS BIOS Middleware is based on excellent work done by [charliefoxtwo](https://g
 
 ## Acknowledgements
 
-- [DCS-BIOS-Communicator library by charliefoxtwo](https://www.flaticon.com/authors/good-ware](https://github.com/charliefoxtwo/DCS-BIOS-Communicator
+- [DCS-BIOS-Communicator library by charliefoxtwo](https://github.com/charliefoxtwo/DCS-BIOS-Communicator)
