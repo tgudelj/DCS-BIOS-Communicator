@@ -71,7 +71,7 @@ namespace DCSMATRICFeeder {
 #if DEBUG
                 Debug.WriteLine($"DCS-BIOS import command: {command}");
 #endif
-                _biosClient?.Send(command, ""); //method takes separate biosAddress and data, but in the end it is concatenated and sent via UDP anyway
+                _biosClient?.SendRaw(command); //method takes separate biosAddress and data, but in the end it is concatenated and sent via UDP anyway
                 //Reset the variable immediatelly
                 matricComm.SetVariables(new List<ServerVariable>() { new ServerVariable() {
                     Name = DCS_INPUT_COMMAND,

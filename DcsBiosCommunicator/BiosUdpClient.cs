@@ -47,6 +47,12 @@ namespace DcsBios.Communicator
             await _client.SendAsync(byteData, byteData.Length, _target);
         }
 
+        public async Task SendRaw(string command) {
+            var message = $"{command}{BlankBiosCommand}";
+            var byteData = Encoding.UTF8.GetBytes(message);
+            await _client.SendAsync(byteData, byteData.Length, _target);
+        }
+
         public void OpenConnection()
         {
             _log.LogDebug("Opening connection to DCS-BIOS...");
