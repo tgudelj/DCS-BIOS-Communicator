@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace DCSMATRICFeeder {
+namespace EXM.DBMM {
     internal class MatricDCSTranslator : IBiosTranslator, IDisposable {
 
         internal class TxRxNotificationEventArgs : EventArgs {

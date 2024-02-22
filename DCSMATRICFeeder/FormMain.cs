@@ -2,10 +2,12 @@ using DcsBios.Communicator;
 using DcsBios.Communicator.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System.Diagnostics;
 using System.Net;
+using System.Security.Policy;
 using System.Text.Json.Nodes;
 
-namespace DCSMATRICFeeder {
+namespace EXM.DBMM {
     public partial class FormMain : Form {
 
         bool _isRunning = false;
@@ -26,10 +28,11 @@ namespace DCSMATRICFeeder {
 
         private void Translator_UpdateBufferSizeNotification(object? sender, MatricDCSTranslator.TxRxNotificationEventArgs e) {
             //Update only if form is visible and not minimized
-            if(!this.Visible || WindowState == FormWindowState.Minimized) { return; }
+            if (!this.Visible || WindowState == FormWindowState.Minimized) { return; }
             if (pbBuffer.InvokeRequired) {
                 pbBuffer.Invoke(new Action(() => pbBuffer.Value = e.Count));
-            } else {
+            }
+            else {
                 pbBuffer.Value = e.Count;
             }
         }
@@ -39,7 +42,8 @@ namespace DCSMATRICFeeder {
             if (!this.Visible || WindowState == FormWindowState.Minimized) { return; }
             if (pbSentVars.InvokeRequired) {
                 pbSentVars.Invoke(new Action(() => pbSentVars.Value = e.Count));
-            } else {
+            }
+            else {
                 pbSentVars.Value = e.Count;
             }
         }
@@ -53,7 +57,8 @@ namespace DCSMATRICFeeder {
             }
             if (Directory.Exists(Program.mwSettings.DCSBIOSJsonPath)) {
                 txtDCSBiosInstancePath.Text = Program.mwSettings.DCSBIOSJsonPath;
-            } else {
+            }
+            else {
                 if (biosPaths.Count > 0) {
                     txtDCSBiosInstancePath.Text = biosPaths.FirstOrDefault();
                 }
@@ -103,10 +108,12 @@ namespace DCSMATRICFeeder {
                     JsonObject matricConf = (JsonObject)JsonObject.Parse(File.ReadAllText(matricConfigPath));
                     port = matricConf["NET_IntegrationAPIUDPPort"].GetValue<int>();
                     enabled = matricConf["EnableIntegrationAPI"].GetValue<bool>();
-                } else {
+                }
+                else {
                     throw new Exception($@"MATRIC configuration file not found at ""{matricConfigPath}""");
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 Program.logger.LogError($"Couldn't read MATRIC configuration {e.Message}");
             }
             return (enabled, port);
@@ -122,10 +129,12 @@ namespace DCSMATRICFeeder {
             };
             if (string.IsNullOrEmpty(Properties.Settings.Default.AircraftVariables)) {
                 Program.mwSettings.AircraftVariables = new Dictionary<string, List<string>>();
-            } else {
+            }
+            else {
                 try {
                     Program.mwSettings.AircraftVariables = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(Properties.Settings.Default.AircraftVariables);
-                } catch (Exception ex) {
+                }
+                catch (Exception ex) {
                     MessageBox.Show($@"Could not deserialize AircraftVariable settings", "Load settings exception", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     Program.mwSettings.AircraftVariables = new Dictionary<string, List<string>>();
                 }
@@ -201,8 +210,8 @@ namespace DCSMATRICFeeder {
                 return;
             }
             Program.mwSettings.DCSBIOSJsonPath = txtDCSBiosInstancePath.Text;
-            Program.mwSettings.ListenPort = (int) txtBIOSListenPort.Value;
-            Program.mwSettings.ImportPort = (int) txtDCSBIOSImportPort.Value;
+            Program.mwSettings.ListenPort = (int)txtBIOSListenPort.Value;
+            Program.mwSettings.ImportPort = (int)txtDCSBIOSImportPort.Value;
 
             (bool matricIntegrationEnabled, int matricIntegrationPort) = GetMatricConfig();
 
@@ -224,7 +233,6 @@ namespace DCSMATRICFeeder {
                 biosListener.RegisterConfiguration(config);
             }
 
-            //Save settings
             SaveSettings();
 
             // start the listener
@@ -248,6 +256,81 @@ namespace DCSMATRICFeeder {
             lblUpdateFrequency.Text = tbUpdateFrequency.Value.ToString();
         }
 
+        private void manualToolStripMenuItem_Click(object sender, EventArgs e) {
+            Process.Start(new ProcessStartInfo() {
+                UseShellExecute = true,
+                FileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DCSMATRICManual.pdf")
+            });
+        }
 
+        private void projectWebToolStripMenuItem_Click(object sender, EventArgs e) {
+            Process.Start(new ProcessStartInfo() {
+                UseShellExecute = true,
+                FileName = "https://github.com/tgudelj/DCS-BIOS-MATRIC-Middleware"
+            });
+        }
+
+        private void checkForUpdateToolStripMenuItem_Click(object sender, EventArgs e) {
+            Process.Start(new ProcessStartInfo() {
+                UseShellExecute = true,
+                FileName = "https://github.com/tgudelj/DCS-BIOS-MATRIC-Middleware/releases"
+            });
+        }
+
+        private void exportVariablesListToolStripMenuItem_Click(object sender, EventArgs e) {
+            OpenFileDialog ofd = new OpenFileDialog() {
+                Title = "Export variables configuration",
+                Filter = "JSON files|*.json",
+                Multiselect = false,
+                DefaultExt = ".json",
+                ShowPinnedPlaces = true,
+                CheckFileExists = false
+            };
+
+            DialogResult dialogResult = ofd.ShowDialog();
+            if (dialogResult == DialogResult.OK) {
+                string file = ofd.FileName;
+                string content = JsonConvert.SerializeObject(Program.mwSettings.AircraftVariables, Formatting.Indented);
+                File.WriteAllText(file, content, System.Text.Encoding.UTF8);
+            }
+        }
+
+        private async void importVariablesListToolStripMenuItem_Click(object sender, EventArgs e) {
+            OpenFileDialog ofd = new OpenFileDialog() {
+                Title = "Import variables configuration",
+                Filter = "JSON files (*.json)|*.json;|All files (*.*)|*.*",
+                FilterIndex = 0,
+                Multiselect = false,
+                DefaultExt = ".json",
+                ShowPinnedPlaces = true,
+                CheckFileExists = true
+            };
+            DialogResult dialogResult = ofd.ShowDialog();
+            if (dialogResult != DialogResult.OK) {
+                return;
+            }
+            string file = ofd.FileName;
+            try { 
+                string content = await File.ReadAllTextAsync(file);
+                Dictionary<string, List<string>>? dataToMerge = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(content);
+                if(dataToMerge ==  null) {
+                    throw new Exception($@"Could not deserialize data in {file}");
+                }
+                foreach(string moduleName in dataToMerge.Keys) {
+                    if(!Program.mwSettings.AircraftVariables.ContainsKey(moduleName)) {
+                        Program.mwSettings.AircraftVariables.Add(moduleName, new List<string>());
+                    }
+                    foreach (string variableName in dataToMerge[moduleName]) {
+                        if (!Program.mwSettings.AircraftVariables[moduleName].Contains(variableName)) {
+                            Program.mwSettings.AircraftVariables[moduleName].Add(variableName);
+                        }
+                    }
+                }
+                Properties.Settings.Default.AircraftVariables = JsonConvert.SerializeObject(Program.mwSettings.AircraftVariables);
+                Properties.Settings.Default.Save();
+            } catch(Exception ex) {
+                MessageBox.Show($@"Could not import variables from {file}{Environment.NewLine}{ex.Message}", "Import failed", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }            
+        }
     }
 }

@@ -1,10 +1,10 @@
 using DcsBios.Communicator.Configuration;
-using DCSMATRICFeeder.Properties;
+using EXM.DBMM.Properties;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 
-namespace DCSMATRICFeeder {
+namespace EXM.DBMM {
     internal static class Program {
         internal static ILoggerFactory loggerFactory;
         internal static ILogger logger;

@@ -1,5 +1,5 @@
 ﻿
-namespace DCSMATRICFeeder {
+namespace EXM.DBMM {
     partial class FormVariablesConfiguration {
         /// <summary>
         /// Required designer variable.

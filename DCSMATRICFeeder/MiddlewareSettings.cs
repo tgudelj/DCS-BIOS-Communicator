@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace DCSMATRICFeeder {
+namespace EXM.DBMM {
     /// <summary>
     /// Represents DCS-BIOS MATRIC middleware configuration
     /// </summary>

@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace DCSMATRICFeeder {
+namespace EXM.DBMM {
     public partial class FormVariablesConfiguration : Form {
         internal BindingList<string> _aircraftList = new BindingList<string>();
         internal BindingList<string> _categoriesList = new BindingList<string>();
