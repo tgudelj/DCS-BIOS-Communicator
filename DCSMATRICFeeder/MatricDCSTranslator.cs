@@ -52,8 +52,6 @@ namespace EXM.DBMM {
             _changesBuffer.Add(dcsInputVariable.Name, dcsInputVariable);
         }
 
-
-
         public event EventHandler<TxRxNotificationEventArgs> UpdateSentNotification;
 
         public event EventHandler<TxRxNotificationEventArgs> UpdateBufferSizeNotification;
@@ -143,8 +141,10 @@ namespace EXM.DBMM {
                             }
                         }
                     }
+                    _dcsValues[varName] = data;
                 }
                 else {
+                    _dcsValues[varName] = data;
                     //add or replace in changes
                     if (_changesBuffer.ContainsKey(varName)) {
                         _changesBuffer[varName].Value = data;
@@ -185,7 +185,7 @@ namespace EXM.DBMM {
                     _changesBuffer.Clear();            
                 }
             }
-            Task.Run(() => UpdateSentNotification?.Invoke(this, new TxRxNotificationEventArgs(Math.Min(sent, 100))));
+            Task.Run(() => UpdateSentNotification?.Invoke(this, new TxRxNotificationEventArgs(Math.Min(sent, MAX_VAR_LIST))));
         }
 
         public void Dispose() {
