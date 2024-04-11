@@ -87,30 +87,29 @@ namespace EXM.DBMM {
         }
 
         public void FromBios<T>(string biosCode, T data) {
-            if (biosCode == "_ACFT_NAME") {
-                //get list of user selected variables. If it doesn't exist do not filter, forward everything to MATRIC
-                if (!data.ToString().Equals(_currentAircraftName)) { 
-                    //New aircraft, load config for aircraft
-                    _currentAircraftName = data.ToString();
+            if (biosCode == "_ACFT_NAME" && !data.ToString().Equals(_currentAircraftName)) {
+            //get list of user selected variables. If it doesn't exist do not filter, forward everything to MATRIC
+                //New aircraft, load config for aircraft
+                _currentAircraftName = data.ToString();
 #if DEBUG
-                    Debug.WriteLine($"DCS-BIOS module detected {_currentAircraftName}");
+                Debug.WriteLine($"DCS-BIOS module detected {_currentAircraftName}");
 #endif
-                    if (Program.mwSettings.AircraftVariables.ContainsKey(_currentAircraftName)) {
-                        _allowedVariables.Clear();
-                        _allowedVariables = Program.mwSettings.AircraftVariables[_currentAircraftName];
-                        //Add common and metadata
-                        if (Program.mwSettings.AircraftVariables.ContainsKey(COMMON_DATA)) {
-                            _allowedVariables.AddRange(Program.mwSettings.AircraftVariables[COMMON_DATA]);
-                        }
-                        if (Program.mwSettings.AircraftVariables.ContainsKey(METADATA_START)) {
-                            _allowedVariables.AddRange(Program.mwSettings.AircraftVariables[METADATA_START]);
-                        }
-                        if (Program.mwSettings.AircraftVariables.ContainsKey(METADATA_END)) {
-                            _allowedVariables.AddRange(Program.mwSettings.AircraftVariables[METADATA_END]);
-                        }
+                if (Program.mwSettings.AircraftVariables.ContainsKey(_currentAircraftName)) {
+                    _allowedVariables.Clear();
+                    _allowedVariables.AddRange(Program.mwSettings.AircraftVariables[_currentAircraftName]);
+                    //Add common and metadata
+                    if (Program.mwSettings.AircraftVariables.ContainsKey(COMMON_DATA)) {
+                        _allowedVariables.AddRange(Program.mwSettings.AircraftVariables[COMMON_DATA]);
+                    }
+                    if (Program.mwSettings.AircraftVariables.ContainsKey(METADATA_START)) {
+                        _allowedVariables.AddRange(Program.mwSettings.AircraftVariables[METADATA_START]);
+                    }
+                    if (Program.mwSettings.AircraftVariables.ContainsKey(METADATA_END)) {
+                        _allowedVariables.AddRange(Program.mwSettings.AircraftVariables[METADATA_END]);
                     }
                 }
             }
+
             if(string.IsNullOrEmpty(_currentAircraftName)) {
                 //Do not export anything until we know the module and can load variables configuration for that module
                 return;
@@ -127,17 +126,22 @@ namespace EXM.DBMM {
                 object currentData = null;
                 if (_dcsValues.TryGetValue(varName, out currentData)) {
                     if (currentData.ToString() != data.ToString()) {
+                        //Variable has changed
                         //add or replace in changes
                         if (_changesBuffer.ContainsKey(varName)) {
                             _changesBuffer[varName].Value = data;
                         }
                         else {
                             if (data is string) {
-                                _changesBuffer.Add(varName, new ServerVariable() { Name = varName, Value = data.ToString(), VariableType = ServerVariable.ServerVariableType.STRING });
+                                _changesBuffer.Add(varName, new ServerVariable() { Name = varName, 
+                                    Value = data.ToString(), 
+                                    VariableType = ServerVariable.ServerVariableType.STRING });
                             }
                             else {
                                 //int 
-                                _changesBuffer.Add(varName, new ServerVariable() { Name = varName, Value = data, VariableType = ServerVariable.ServerVariableType.NUMBER });
+                                _changesBuffer.Add(varName, new ServerVariable() { Name = varName, 
+                                    Value = data, 
+                                    VariableType = ServerVariable.ServerVariableType.NUMBER });
                             }
                         }
                     }
@@ -164,7 +168,12 @@ namespace EXM.DBMM {
         }
 
         public void SendUpdates(object state) {
-            //Debug.WriteLine($"Changes: {_changesBuffer.Keys.Count}");
+#if DEBUG
+            Debug.WriteLine($"Sending updates, changes: {_changesBuffer.Keys.Count}");
+            foreach (var key in _changesBuffer.Keys) {
+                Debug.WriteLine($"{key}: {_changesBuffer[key].Value}");
+            }
+#endif
             int bufferSize = _changesBuffer.Count;
             Task.Run(() => {
                 UpdateBufferSizeNotification?.Invoke(this, new TxRxNotificationEventArgs(Math.Min(bufferSize, 200)));
@@ -185,7 +194,7 @@ namespace EXM.DBMM {
                     _changesBuffer.Clear();            
                 }
             }
-            Task.Run(() => UpdateSentNotification?.Invoke(this, new TxRxNotificationEventArgs(Math.Min(sent, MAX_VAR_LIST))));
+            Task.Run(() => UpdateSentNotification?.Invoke(this, new TxRxNotificationEventArgs(Math.Min(sent, 200))));
         }
 
         public void Dispose() {

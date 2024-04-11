@@ -10,7 +10,7 @@
     <ApplicationIcon>app_icon_128.ico</ApplicationIcon>
     <PackageIcon>app_icon_dcs_128.png</PackageIcon>
     <Title>DCS-BIOS MATRIC Middleware</Title>
-	<Version>1.3</Version>
+	<Version>1.4</Version>
     <RootNamespace>EXM.DBMM</RootNamespace>
   </PropertyGroup>
 
