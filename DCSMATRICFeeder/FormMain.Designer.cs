@@ -62,7 +62,7 @@
             // txtBIOSListenPort
             // 
             txtBIOSListenPort.Font = new Font("Segoe UI", 11F);
-            txtBIOSListenPort.Location = new Point(436, 137);
+            txtBIOSListenPort.Location = new Point(436, 155);
             txtBIOSListenPort.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
             txtBIOSListenPort.Name = "txtBIOSListenPort";
             txtBIOSListenPort.Size = new Size(227, 27);
@@ -72,9 +72,9 @@
             // lblBiosListenIP
             // 
             lblBiosListenIP.Font = new Font("Segoe UI", 10F);
-            lblBiosListenIP.Location = new Point(12, 101);
+            lblBiosListenIP.Location = new Point(12, 114);
             lblBiosListenIP.Name = "lblBiosListenIP";
-            lblBiosListenIP.Size = new Size(418, 29);
+            lblBiosListenIP.Size = new Size(418, 33);
             lblBiosListenIP.TabIndex = 2;
             lblBiosListenIP.Text = "DCS-BIOS listener address (default 239.255.50.10 multicast)";
             lblBiosListenIP.Click += lblBiosListenIP_Click;
@@ -84,7 +84,7 @@
             txtListenIp.Font = new Font("Segoe UI", 11F);
             txtListenIp.FormattingEnabled = true;
             txtListenIp.Items.AddRange(new object[] { "239.255.50.10" });
-            txtListenIp.Location = new Point(436, 101);
+            txtListenIp.Location = new Point(436, 114);
             txtListenIp.Name = "txtListenIp";
             txtListenIp.Size = new Size(227, 28);
             txtListenIp.TabIndex = 3;
@@ -94,9 +94,9 @@
             // 
             lblBiosListenPort.FlatStyle = FlatStyle.Flat;
             lblBiosListenPort.Font = new Font("Segoe UI", 10F);
-            lblBiosListenPort.Location = new Point(12, 136);
+            lblBiosListenPort.Location = new Point(12, 154);
             lblBiosListenPort.Name = "lblBiosListenPort";
-            lblBiosListenPort.Size = new Size(418, 29);
+            lblBiosListenPort.Size = new Size(418, 33);
             lblBiosListenPort.TabIndex = 4;
             lblBiosListenPort.Text = "DCS-BIOS listener port (default 5010)";
             lblBiosListenPort.Click += lblBiosListenPort_Click;
@@ -104,9 +104,9 @@
             // btnStartStop
             // 
             btnStartStop.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
-            btnStartStop.Location = new Point(436, 272);
+            btnStartStop.Location = new Point(436, 308);
             btnStartStop.Name = "btnStartStop";
-            btnStartStop.Size = new Size(227, 43);
+            btnStartStop.Size = new Size(227, 49);
             btnStartStop.TabIndex = 7;
             btnStartStop.Text = "START";
             btnStartStop.UseVisualStyleBackColor = true;
@@ -114,9 +114,9 @@
             // 
             // btnBrowse
             // 
-            btnBrowse.Location = new Point(588, 58);
+            btnBrowse.Location = new Point(588, 66);
             btnBrowse.Name = "btnBrowse";
-            btnBrowse.Size = new Size(75, 29);
+            btnBrowse.Size = new Size(75, 33);
             btnBrowse.TabIndex = 2;
             btnBrowse.Text = "Browse...";
             btnBrowse.UseVisualStyleBackColor = true;
@@ -126,7 +126,7 @@
             // 
             txtDCSBiosInstancePath.Font = new Font("Segoe UI", 11F);
             txtDCSBiosInstancePath.FormattingEnabled = true;
-            txtDCSBiosInstancePath.Location = new Point(12, 58);
+            txtDCSBiosInstancePath.Location = new Point(12, 66);
             txtDCSBiosInstancePath.Name = "txtDCSBiosInstancePath";
             txtDCSBiosInstancePath.Size = new Size(570, 28);
             txtDCSBiosInstancePath.TabIndex = 1;
@@ -134,9 +134,9 @@
             // lblBiosInstance
             // 
             lblBiosInstance.Font = new Font("Segoe UI", 10F);
-            lblBiosInstance.Location = new Point(12, 29);
+            lblBiosInstance.Location = new Point(12, 33);
             lblBiosInstance.Name = "lblBiosInstance";
-            lblBiosInstance.Size = new Size(570, 22);
+            lblBiosInstance.Size = new Size(570, 25);
             lblBiosInstance.TabIndex = 13;
             lblBiosInstance.Text = "DCS-BIOS instance (<DCS user folder>\\Scripts\\DCS-BIOS\\doc\\json)";
             lblBiosInstance.Click += lblBiosInstance_Click;
@@ -145,10 +145,10 @@
             // 
             pbSentVars.BackColor = Color.FromArgb(66, 66, 66);
             pbSentVars.ForeColor = Color.FromArgb(244, 157, 15);
-            pbSentVars.Location = new Point(74, 389);
+            pbSentVars.Location = new Point(74, 441);
             pbSentVars.Maximum = 200;
             pbSentVars.Name = "pbSentVars";
-            pbSentVars.Size = new Size(583, 23);
+            pbSentVars.Size = new Size(583, 26);
             pbSentVars.Step = 1;
             pbSentVars.Style = ProgressBarStyle.Continuous;
             pbSentVars.TabIndex = 14;
@@ -157,10 +157,10 @@
             // 
             pbBuffer.BackColor = Color.FromArgb(66, 66, 66);
             pbBuffer.ForeColor = Color.FromArgb(244, 157, 15);
-            pbBuffer.Location = new Point(74, 360);
+            pbBuffer.Location = new Point(74, 408);
             pbBuffer.Maximum = 200;
             pbBuffer.Name = "pbBuffer";
-            pbBuffer.Size = new Size(583, 23);
+            pbBuffer.Size = new Size(583, 26);
             pbBuffer.Step = 1;
             pbBuffer.Style = ProgressBarStyle.Continuous;
             pbBuffer.TabIndex = 15;
@@ -170,7 +170,7 @@
             label1.AutoSize = true;
             label1.FlatStyle = FlatStyle.Flat;
             label1.Font = new Font("Segoe UI", 10F);
-            label1.Location = new Point(11, 32);
+            label1.Location = new Point(11, 36);
             label1.Name = "label1";
             label1.Size = new Size(45, 19);
             label1.TabIndex = 16;
@@ -181,7 +181,7 @@
             label2.AutoSize = true;
             label2.FlatStyle = FlatStyle.Flat;
             label2.Font = new Font("Segoe UI", 10F);
-            label2.Location = new Point(11, 61);
+            label2.Location = new Point(11, 69);
             label2.Name = "label2";
             label2.Size = new Size(21, 19);
             label2.TabIndex = 17;
@@ -192,18 +192,18 @@
             groupBox1.Controls.Add(label2);
             groupBox1.Controls.Add(label1);
             groupBox1.Font = new Font("Segoe UI", 10F);
-            groupBox1.Location = new Point(12, 328);
+            groupBox1.Location = new Point(12, 372);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(651, 101);
+            groupBox1.Size = new Size(651, 108);
             groupBox1.TabIndex = 18;
             groupBox1.TabStop = false;
             groupBox1.Text = "Status";
             // 
             // btnFilterDialog
             // 
-            btnFilterDialog.Location = new Point(12, 273);
+            btnFilterDialog.Location = new Point(12, 309);
             btnFilterDialog.Name = "btnFilterDialog";
-            btnFilterDialog.Size = new Size(227, 43);
+            btnFilterDialog.Size = new Size(227, 49);
             btnFilterDialog.TabIndex = 6;
             btnFilterDialog.Text = "Configure export variables";
             btnFilterDialog.UseVisualStyleBackColor = true;
@@ -213,16 +213,16 @@
             // 
             lblUpdatesLabel.FlatStyle = FlatStyle.Flat;
             lblUpdatesLabel.Font = new Font("Segoe UI", 10F);
-            lblUpdatesLabel.Location = new Point(12, 176);
+            lblUpdatesLabel.Location = new Point(12, 199);
             lblUpdatesLabel.Name = "lblUpdatesLabel";
-            lblUpdatesLabel.Size = new Size(371, 29);
+            lblUpdatesLabel.Size = new Size(371, 33);
             lblUpdatesLabel.TabIndex = 20;
             lblUpdatesLabel.Text = "Update frequency [updates/second]";
             lblUpdatesLabel.Click += lblUpdatesLabel_Click;
             // 
             // tbUpdateFrequency
             // 
-            tbUpdateFrequency.Location = new Point(471, 168);
+            tbUpdateFrequency.Location = new Point(471, 190);
             tbUpdateFrequency.Maximum = 25;
             tbUpdateFrequency.Minimum = 1;
             tbUpdateFrequency.Name = "tbUpdateFrequency";
@@ -236,9 +236,9 @@
             // 
             lblUpdateFrequency.FlatStyle = FlatStyle.Flat;
             lblUpdateFrequency.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
-            lblUpdateFrequency.Location = new Point(436, 170);
+            lblUpdateFrequency.Location = new Point(436, 193);
             lblUpdateFrequency.Name = "lblUpdateFrequency";
-            lblUpdateFrequency.Size = new Size(29, 41);
+            lblUpdateFrequency.Size = new Size(29, 46);
             lblUpdateFrequency.TabIndex = 22;
             lblUpdateFrequency.Text = "00";
             lblUpdateFrequency.TextAlign = ContentAlignment.MiddleCenter;
@@ -247,16 +247,16 @@
             // 
             lblDCSBIOSImport.FlatStyle = FlatStyle.Flat;
             lblDCSBIOSImport.Font = new Font("Segoe UI", 10F);
-            lblDCSBIOSImport.Location = new Point(12, 212);
+            lblDCSBIOSImport.Location = new Point(12, 240);
             lblDCSBIOSImport.Name = "lblDCSBIOSImport";
-            lblDCSBIOSImport.Size = new Size(418, 29);
+            lblDCSBIOSImport.Size = new Size(418, 33);
             lblDCSBIOSImport.TabIndex = 23;
             lblDCSBIOSImport.Text = "DCS-BIOS Import port (default 7778)";
             // 
             // txtDCSBIOSImportPort
             // 
             txtDCSBIOSImportPort.Font = new Font("Segoe UI", 11F);
-            txtDCSBIOSImportPort.Location = new Point(436, 213);
+            txtDCSBIOSImportPort.Location = new Point(436, 241);
             txtDCSBIOSImportPort.Maximum = new decimal(new int[] { 65535, 0, 0, 0 });
             txtDCSBIOSImportPort.Name = "txtDCSBIOSImportPort";
             txtDCSBIOSImportPort.Size = new Size(227, 27);
@@ -268,7 +268,7 @@
             menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, helpToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(675, 24);
+            menuStrip1.Size = new Size(675, 25);
             menuStrip1.TabIndex = 25;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -276,20 +276,20 @@
             // 
             fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { exportVariablesListToolStripMenuItem, importVariablesListToolStripMenuItem });
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            fileToolStripMenuItem.Size = new Size(37, 20);
+            fileToolStripMenuItem.Size = new Size(39, 21);
             fileToolStripMenuItem.Text = "File";
             // 
             // exportVariablesListToolStripMenuItem
             // 
             exportVariablesListToolStripMenuItem.Name = "exportVariablesListToolStripMenuItem";
-            exportVariablesListToolStripMenuItem.Size = new Size(180, 22);
+            exportVariablesListToolStripMenuItem.Size = new Size(191, 22);
             exportVariablesListToolStripMenuItem.Text = "Export variables list";
             exportVariablesListToolStripMenuItem.Click += exportVariablesListToolStripMenuItem_Click;
             // 
             // importVariablesListToolStripMenuItem
             // 
             importVariablesListToolStripMenuItem.Name = "importVariablesListToolStripMenuItem";
-            importVariablesListToolStripMenuItem.Size = new Size(180, 22);
+            importVariablesListToolStripMenuItem.Size = new Size(191, 22);
             importVariablesListToolStripMenuItem.Text = "Import variables list";
             importVariablesListToolStripMenuItem.Click += importVariablesListToolStripMenuItem_Click;
             // 
@@ -297,35 +297,35 @@
             // 
             helpToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { manualToolStripMenuItem, projectWebToolStripMenuItem, checkForUpdateToolStripMenuItem });
             helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            helpToolStripMenuItem.Size = new Size(44, 20);
+            helpToolStripMenuItem.Size = new Size(47, 21);
             helpToolStripMenuItem.Text = "Help";
             // 
             // manualToolStripMenuItem
             // 
             manualToolStripMenuItem.Name = "manualToolStripMenuItem";
-            manualToolStripMenuItem.Size = new Size(144, 22);
+            manualToolStripMenuItem.Size = new Size(156, 22);
             manualToolStripMenuItem.Text = "Manual";
             manualToolStripMenuItem.Click += manualToolStripMenuItem_Click;
             // 
             // projectWebToolStripMenuItem
             // 
             projectWebToolStripMenuItem.Name = "projectWebToolStripMenuItem";
-            projectWebToolStripMenuItem.Size = new Size(144, 22);
+            projectWebToolStripMenuItem.Size = new Size(156, 22);
             projectWebToolStripMenuItem.Text = "Project web";
             projectWebToolStripMenuItem.Click += projectWebToolStripMenuItem_Click;
             // 
             // checkForUpdateToolStripMenuItem
             // 
             checkForUpdateToolStripMenuItem.Name = "checkForUpdateToolStripMenuItem";
-            checkForUpdateToolStripMenuItem.Size = new Size(144, 22);
+            checkForUpdateToolStripMenuItem.Size = new Size(156, 22);
             checkForUpdateToolStripMenuItem.Text = "Latest release";
             checkForUpdateToolStripMenuItem.Click += checkForUpdateToolStripMenuItem_Click;
             // 
             // FormMain
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(7F, 17F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(675, 438);
+            ClientSize = new Size(675, 484);
             Controls.Add(lblDCSBIOSImport);
             Controls.Add(txtDCSBIOSImportPort);
             Controls.Add(lblUpdateFrequency);

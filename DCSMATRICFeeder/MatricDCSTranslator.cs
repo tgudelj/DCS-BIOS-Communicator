@@ -94,6 +94,13 @@ namespace EXM.DBMM {
 #if DEBUG
                 Debug.WriteLine($"DCS-BIOS module detected {_currentAircraftName}");
 #endif
+                if (!Program.mwSettings.AircraftVariables.ContainsKey(_currentAircraftName)) {
+                    //Look for an alias
+                    if (Program.aircraftBiosConfigurations.Any(t => t.Value.Aliases.Contains(_currentAircraftName))) {
+                        _currentAircraftName = Program.aircraftBiosConfigurations.Where(t => t.Value.Aliases.Contains(_currentAircraftName)).FirstOrDefault().Key;
+                    }
+                }
+
                 if (Program.mwSettings.AircraftVariables.ContainsKey(_currentAircraftName)) {
                     _allowedVariables.Clear();
                     _allowedVariables.AddRange(Program.mwSettings.AircraftVariables[_currentAircraftName]);
